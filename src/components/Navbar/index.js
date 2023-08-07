@@ -7,7 +7,7 @@ export default function Navbar(){
         <nav className="flex justify-between items-center gap-x-3 py-2 px-3 text-primary font-medium border">
           <Link href="/">
             <div>
-              <Image src="/logo/midata.png" width={196} height={59} />
+              <Image src="/logo/midata.png" width={196} height={59} alt="MiData Logo" />
             </div>
           </Link>
           <div className="flex justify-center gap-x-10 text-md items-center">
