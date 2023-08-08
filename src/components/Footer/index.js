@@ -5,7 +5,7 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#DFD4FF] h-fit py-5 px-10">
+    <footer className="bg-[#DFD4FF] h-fit py-5 px-10 absolute bottom-0 w-full">
       <div className="flex justify-between items-center py-3">
         <div>
           <Image src="/logo/midata.png" width={160} height={39} className="" />
