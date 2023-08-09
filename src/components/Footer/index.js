@@ -5,8 +5,20 @@ export default function Footer() {
   const currentYear = new Date().getFullYear();
 
   return (
-    <footer className="bg-[#DFD4FF] h-fit py-5 px-10 relative bottom-0 w-full mt-auto">
-      <div className="flex justify-between items-center py-3">
+    <footer className="bg-[#DFD4FF] h-fit py-[3.5rem] px-10 relative bottom-0 w-full">
+      <div className="flex justify-between items-center py-[3rem] relative">
+        {/* <Image
+          src="/bg/ball.png"
+          width={294}
+          height={367}
+          className="absolute bg-blend-screen h-[90px] w-[60px] object-contain opacity-50 top-0 left-[15%]"
+        />
+        <Image
+          src="/bg/ball2.png"
+          width={295}
+          height={100}
+          className="absolute bg-blend-screen h-[380px] w-[295px] object-contain opacity-50 top-0 left-[35%]"
+        /> */}
         <div>
           <Image src="/logo/midata.png" width={160} height={39} className="" />
         </div>
@@ -34,7 +46,7 @@ export default function Footer() {
       <div className="flex justify-center">
         <hr className="w-[95%] border-[#37373771]" />
       </div>
-      <div className="flex w-[90%] justify-between mx-auto my-5 items-center">
+      <div className="flex w-[90%] justify-between mx-auto my-5 items-center sm:flex-row flex-col">
         <h3 className="text-[#37139D] font-extrabold text-5xl leading-[3rem]">
           See the big
           <br /> picture in
