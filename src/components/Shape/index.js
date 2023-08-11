@@ -16,12 +16,8 @@ export function Tag({ iconURI, heading, text, color, direction }) {
           className="relative object-contain"
         />
         <div className="flex flex-col gap-y-3">
-          <h3 className="text-3xl font-bold">
-            {heading ? heading : "Data Collection"}
-          </h3>
-          <p className="font-thin text-md">
-            {text}
-          </p>
+          <h3 className="text-3xl font-bold">{heading}</h3>
+          <p className="font-thin text-md">{text}</p>
         </div>
       </div>
       {direction === "left" ? (
@@ -70,10 +66,8 @@ export function Clip({ iconURI, heading, text, color, clip }) {
             className="relative object-contain"
           />
           <div className="flex flex-col gap-y-3 justify-center items-center">
-            <h3 className="text-xl font-bold">
-              {heading ? heading : "Data Collection"}
-            </h3>
-            <p className="font-thin text-[0.68rem]  w-[95%]">{text}</p>
+            <h3 className="text-xl font-bold">{heading}</h3>
+            <p className="font-normal text-[0.68rem]  w-[95%]">{text}</p>
           </div>
         </div>
         <svg
@@ -106,10 +100,8 @@ export function Clip({ iconURI, heading, text, color, clip }) {
             className="relative object-contain"
           />
           <div className="flex flex-col gap-y-3 justify-center items-center">
-            <h3 className="text-xl font-bold">
-              {heading ? heading : "Data Collection"}
-            </h3>
-            <p className="font-thin text-[0.68rem] w-[95%]">{text}</p>
+            <h3 className="text-xl font-bold">{heading}</h3>
+            <p className="font-normal text-[0.68rem] w-[95%]">{text}</p>
           </div>
         </div>
         <svg
@@ -143,9 +135,9 @@ export function Clip({ iconURI, heading, text, color, clip }) {
           />
           <div className="flex flex-col gap-y-3 justify-center items-center">
             <h3 className="text-xl font-bold">
-              {heading ? heading : "Data Collection"}
+              {heading}
             </h3>
-            <p className="font-thin text-[0.68rem] w-[95%]">{text}</p>
+            <p className="font-normal text-[0.68rem] w-[95%]">{text}</p>
           </div>
         </div>
         <svg
