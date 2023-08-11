@@ -24,22 +24,22 @@ export default function Footer() {
         </div>
         <div className="hidden flex-row sm:flex">
           <Link href="/">
-            <Image src="/icons/twitter.png" width={45} height={45} />
+            <Image src="/icons/twitter.png" width={45} height={45} alt="Social Media Icons" />
           </Link>
           <Link href="/">
-            <Image src="/icons/youtube.png" width={45} height={45} />
+            <Image src="/icons/youtube.png" width={45} height={45} alt="Social Media Icons" />
           </Link>
           <Link href="/">
-            <Image src="/icons/facebook.png" width={45} height={45} />
+            <Image src="/icons/facebook.png" width={45} height={45} alt="Social Media Icons" />
           </Link>
           <Link href="/">
-            <Image src="/icons/linkedin.png" width={45} height={45} />
+            <Image src="/icons/linkedin.png" width={45} height={45} alt="Social Media Icons" />
           </Link>
           <Link href="/">
-            <Image src="/icons/instagram.png" width={45} height={45} />
+            <Image src="/icons/instagram.png" width={45} height={45} alt="Social Media Icons" />
           </Link>
           <Link href="/">
-            <Image src="/icons/thread.png" width={45} height={45} />
+            <Image src="/icons/thread.png" width={45} height={45} alt="Social Media Icons" />
           </Link>
         </div>
       </div>
@@ -48,22 +48,22 @@ export default function Footer() {
       </div>
       <div className="flex flex-row sm:hidden">
         <Link href="/">
-          <Image src="/icons/twitter.png" width={45} height={45} />
+          <Image src="/icons/twitter.png" width={45} height={45} alt="Social Media Icon" />
         </Link>
         <Link href="/">
-          <Image src="/icons/youtube.png" width={45} height={45} />
+          <Image src="/icons/youtube.png" width={45} height={45} alt="Social Media Icon" />
         </Link>
         <Link href="/">
-          <Image src="/icons/facebook.png" width={45} height={45} />
+          <Image src="/icons/facebook.png" width={45} height={45} alt="Social Media Icon" />
         </Link>
         <Link href="/">
-          <Image src="/icons/linkedin.png" width={45} height={45} />
+          <Image src="/icons/linkedin.png" width={45} height={45} alt="Social Media Icon" />
         </Link>
         <Link href="/">
-          <Image src="/icons/instagram.png" width={45} height={45} />
+          <Image src="/icons/instagram.png" width={45} height={45} alt="Social Media Icon" />
         </Link>
         <Link href="/">
-          <Image src="/icons/thread.png" width={45} height={45} />
+          <Image src="/icons/thread.png" width={45} height={45} alt="Social Media Icon" />
         </Link>
       </div>
       <div className="flex w-[90%] justify-between mx-auto my-5 items-center sm:flex-row flex-col-reverse">
