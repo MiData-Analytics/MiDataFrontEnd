@@ -37,8 +37,8 @@ const dataReporting = [
 
 export function DataReport() {
   return (
-    <section className="my-10">
-      <div className="text-center w-[80%] mx-auto">
+    <section className="my-10 p-2">
+      <div className="text-center sm:w-[80%] w-full mx-auto">
         <h3 className="text-[#583E9C] text-5xl font-bold">Data Reporting</h3>
         <p className="font-semibold">
           The tool aims at simplifying data reporting with analytics and
