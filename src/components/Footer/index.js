@@ -130,7 +130,7 @@ export default function Footer() {
         <hr className="w-[95%] border-[#37373771]" />
       </div>
       <div className="w-[95%] mx-auto pt-5 text-[#373737]">
-        <p className="text-center text-[10px]">
+        <p className="text-center text-[10px] sm:hidden block">
           Powered By: Kimpact Development Initiative
         </p>
         <p className="sm:text-right text-center text-sm font-medium">
