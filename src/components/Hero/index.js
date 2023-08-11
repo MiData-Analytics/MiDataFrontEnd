@@ -39,6 +39,7 @@ md:rounded-br-[355px] rounded-none"
             height={580}
             className="object-contain rounded-full"
             alt="MiData Animation"
+            unoptimized
           />
         </div>
       </div>
