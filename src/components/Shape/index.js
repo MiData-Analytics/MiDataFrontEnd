@@ -90,7 +90,7 @@ export function Clip({ iconURI, heading, text, color, clip }) {
     return (
       <div className="relative h-fit">
         <div
-          className={`absolute top-2 z-10 flex items-center justify-center flex-col text-center`}
+          className={`absolute top-[0.1rem] z-10 flex items-center justify-center flex-col text-center`}
         >
           <Image
             src={iconURI ? iconURI : "/icons/db.png"}
@@ -124,7 +124,7 @@ export function Clip({ iconURI, heading, text, color, clip }) {
     return (
       <div className="relative">
         <div
-          className={`absolute top-0 z-10 flex items-center justify-center flex-col text-center`}
+          className={`absolute top-[-0.6rem] z-10 flex items-center justify-center flex-col text-center`}
         >
           <Image
             src={iconURI ? iconURI : "/icons/db.png"}
