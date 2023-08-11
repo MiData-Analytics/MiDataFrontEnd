@@ -43,7 +43,7 @@ export default function Navbar() {
           </Link>
         </div>
       </nav>
-      <nav className="flex lg:hidden w-full relative">
+      <nav className="flex lg:hidden w-full relative h-[10vh] shadow-b-lg">
         <div className="flex flex-row justify-between items-center w-full pr-2">
           <Link href="/">
             <Image
@@ -70,7 +70,7 @@ export default function Navbar() {
             <motion.div
               initial="hidden"
               animate="visible"
-              exit="hidden" 
+              exit="hidden"
               variants={variants}
               className="fixed top-0 z-20 h-[100vh] bg-white w-full"
             >
