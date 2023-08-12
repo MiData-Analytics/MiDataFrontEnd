@@ -10,10 +10,12 @@
   },
   "dependencies": {
     "autoprefixer": "10.4.14",
+    "awesome-toast-component": "^2.0.6",
     "axios": "^1.4.0",
     "date-fns": "^2.30.0",
     "framer-motion": "^10.15.1",
     "next": "13.4.13",
+    "nextjs-progressbar": "^0.0.16",
     "postcss": "8.4.27",
     "react": "18.2.0",
     "react-cookie": "^4.1.1",
