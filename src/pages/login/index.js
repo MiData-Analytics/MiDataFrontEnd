@@ -4,6 +4,11 @@ import Layout from "@/layouts/Main";
 import { FiEye, FiEyeOff } from "react-icons/fi";
 import Link from "next/link";
 import { Button } from "@/components/Button";
+import axios from "axios";
+import { urls } from "@/utils/urls";
+import Toast from "awesome-toast-component";
+import { Divider } from "@/components/Divider";
+import { FcGoogle } from "react-icons/fc";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -13,7 +18,17 @@ export default function Login() {
   const [clearPassword, setClearPassword] = useState("password");
 
   async function handleSubmit(e) {
-    e.preventDefault()
+    e.preventDefault();
+    // try {
+    //   const res = await axios.post(urls.login, formData);
+
+    //   if (res.status === 200) {
+    //     new Toast("Sign Up Successful");
+    //   }
+    // } catch (error) {
+    //   console.error(error);
+    // }
+    new Toast("Login...")
   }
 
   function handleChange(e) {
@@ -32,10 +47,10 @@ export default function Login() {
         <title>MiData | Login</title>
       </Head>
 
-      <section className="flex justify-center my-10 flex-col items-center">
+      <section className="flex justify-center py-10 flex-col items-center bg-[#F5F5F5]">
         <div className="flex flex-col items-center text-center">
           <h1 className="text-5xl font-bold text-[#5A3FA2]">Welcome Back</h1>
-          <p className="sm:text-xl text-sm mx-auto sm:w-[65%] w-full">
+          <p className="text-sm mx-auto sm:w-[65%] w-full">
             MiData, a fast, flexible, and user-friendly platform, allowing you
             focus on what matters most: your data.
           </p>
@@ -82,16 +97,22 @@ export default function Login() {
             )}
           </div>
           <div className="flex justify-center">
-            <Button
-              type="submit"
-            >
-              Login
-            </Button>
+            <Button type="submit">Login</Button>
           </div>
           <div className="flex justify-end">
-            <Link href="/forget" className="text-sm underline">
-              Forget
+            <Link href="/forgot_password" className="text-sm underline">
+              Forgot Password?
             </Link>
+          </div>
+          <Divider color="text-black" />
+          <div className="flex w-full justify-center">
+            <button
+              className="bg-white rounded-full w-full text-black inline-flex justify-center items-center p-2 gap-1 font-semibold"
+              type="button"
+            >
+              <FcGoogle size={25} />
+              Sign Up with Google
+            </button>
           </div>
         </form>
       </section>
