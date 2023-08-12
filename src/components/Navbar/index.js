@@ -83,6 +83,7 @@ export default function Navbar() {
               </div>
 
               <div className="flex flex-col text-primary items-center text-xl">
+                <Link href="/">Home</Link>
                 <Link href="/about">About MiData</Link>
                 <Link href="/pricing">Pricing</Link>
                 <Link href="/contact">Contact Us</Link>
