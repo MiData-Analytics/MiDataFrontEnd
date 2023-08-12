@@ -101,7 +101,7 @@ export default function SignUp() {
               Forgot Password?
             </Link>
           </div>
-          <Divider />
+          <Divider color="text-white" />
           <div className="flex w-full justify-center">
             <button
               className="bg-white rounded-full w-full text-black inline-flex justify-center items-center p-2 gap-1 font-semibold"
