@@ -6,7 +6,7 @@ export function DashboardLayout({children}){
         <Sidebar />
         <div className="flex w-full flex-col">
           <Header />
-          {children}
+          <div className="w-full h-fit p-3">{children}</div>
         </div>
       </section>
     );
