@@ -50,7 +50,7 @@ export function Sidebar() {
     const { pathname } = useRouter();
 
     useEffect(() => {
-      if (pathname.includes(url)) {
+      if (pathname === url) {
         setActive(true);
       }
     }, []);
