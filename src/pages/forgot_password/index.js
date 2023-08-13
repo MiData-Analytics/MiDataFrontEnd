@@ -2,6 +2,7 @@ import { useState } from "react";
 import Head from "next/head";
 import Layout from "@/layouts/Main";
 import { Button } from "@/components/Button";
+import { baseUrl } from "@/utils/urls";
 
 export default function ForgotPassword() {
   const [emailAddress, setEmailAddress] = useState("");
@@ -24,7 +25,7 @@ export default function ForgotPassword() {
             Reset your password by providing your email below
           </p>
         </div>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="w-full">
           <div className="flex flex-col items-center w-full gap-2">
             <label htmlFor="emailAddress" className="font-bold text-xl">
               Email
@@ -33,7 +34,7 @@ export default function ForgotPassword() {
               type="email"
               name="emailAddress"
               id="emailAddress"
-              className="w-full border rounded-full text-center p-2"
+              className="border sm:w-[395px] w-full rounded-full text-center p-2"
               onChange={(e) => setEmailAddress(e.target.value)}
             />
             <p>{}</p>
