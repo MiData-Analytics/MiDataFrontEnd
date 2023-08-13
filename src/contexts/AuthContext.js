@@ -6,24 +6,28 @@ export const AuthContext = React.createContext({
   logout: () => {},
 });
 
-export const AuthContextProvider = ({ children }) => {
-    const [isLoggedIn,setIsLoggedIn] = useState(false);
+const AuthContextProvider = ({ children }) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    const login = () =>{
-        setIsLoggedIn(true)
-    }
+  const login = () => {
+    setIsLoggedIn(true);
+  };
 
-    const logout = () =>{
-        setIsLoggedIn(false);
-    }
+  const logout = () => {
+    setIsLoggedIn(false);
+  };
 
-    return(
-        <AuthContext.Provider value={{
-            isLoggedIn,
-            login,
-            logout
-        }}>
-            {children}
-        </AuthContext.Provider>
-    )
+  return (
+    <AuthContext.Provider
+      value={{
+        isLoggedIn,
+        login,
+        logout,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  );
 };
+
+export default AuthContextProvider;
