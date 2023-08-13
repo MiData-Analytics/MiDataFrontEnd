@@ -118,7 +118,7 @@ export default function Footer() {
           <br /> picture in
           <br /> every detail
         </h3>
-        <div className="flex items-center gap-x-3">
+        <div className="flex items-center gap-x-10">
           <div className="space-y-2 py-3">
             <h5 className="font-bold text-[#583E9C]">ABOUT MiData</h5>
             <ul className="space-y-2 font-medium">
