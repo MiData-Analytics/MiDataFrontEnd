@@ -71,7 +71,14 @@ export function Sidebar() {
 
   return (
     <header className="w-72 border bg-white h-[100vh] flex flex-col items-center py-3 justify-start gap-10">
-      <Image src="/logo/midata.png" alt="MiData Logo" height={57} width={196} />
+      <Link href="/dashboard">
+        <Image
+          src="/logo/midata.png"
+          alt="MiData Logo"
+          height={57}
+          width={196}
+        />
+      </Link>
       <div className="flex flex-col gap-10 w-full">
         <div className="flex flex-col gap-3">
           {firstLinks.map((link, index) => {
@@ -131,7 +138,9 @@ export function Header() {
         </div>
       </div>
       <div className="w-fit">
-        <p className="inline-flex items-center gap-2 hover:cursor-pointer">Kimpact Development Initiative <AiFillCaretDown size={15} /></p>
+        <p className="inline-flex items-center gap-2 hover:cursor-pointer">
+          Kimpact Development Initiative <AiFillCaretDown size={15} />
+        </p>
       </div>
     </nav>
   );
