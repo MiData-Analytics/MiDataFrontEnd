@@ -177,7 +177,7 @@ export function Header() {
 
   return (
     <>
-      <nav className="w-full lg:hidden flex justify-between border-b-1 items-center py-3 gap-1 px-1">
+      <nav className="w-full lg:hidden flex justify-between border-b items-center py-3 gap-1 px-1">
         <Options />
         <p className="text-xs">Kimpact Development Initiative</p>
       </nav>
