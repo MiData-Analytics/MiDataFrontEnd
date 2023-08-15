@@ -43,7 +43,7 @@ export default function Navbar() {
           </Link>
         </div>
       </nav>
-      <nav className="flex lg:hidden w-full relative h-[10vh] shadow-b-lg">
+      <nav className="flex lg:hidden w-full relative h-[10vh] shadow-lg">
         <div className="flex flex-row justify-between items-center w-full pr-2">
           <Link href="/">
             <Image

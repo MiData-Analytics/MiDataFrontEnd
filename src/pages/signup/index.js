@@ -19,6 +19,10 @@ export default function SignUp() {
 
   async function handleSubmit(e) {
     e.preventDefault();
+    const { password } = formData;
+    if(password.length < 8) {
+      return new Toast("Password is less than 8 characters");
+    }
     new Toast("Registering User...");
   }
 
@@ -66,6 +70,8 @@ export default function SignUp() {
               id="emailAddress"
               className="w-full border rounded-full text-center p-2 text-black"
               onChange={handleChange}
+              value={formData.emailAddress}
+              required
             />
           </div>
           <div className="relative flex flex-col items-center w-full">
@@ -77,7 +83,9 @@ export default function SignUp() {
               name="password"
               id="password"
               className="p-2 w-full border rounded-full text-center text-black"
+              value={formData.password}
               onChange={handleChange}
+              required
             />
             {clearPassword === "password" ? (
               <FiEyeOff

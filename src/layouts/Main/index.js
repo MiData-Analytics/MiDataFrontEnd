@@ -3,9 +3,9 @@ import Footer from "@/components/Footer";
 
 export default function Layout({children}){
     return (
-        <div>
+        <div className="w-full">
             <Navbar />
-            <main>
+            <main className="w-full">
                 {children}
             </main>
             <Footer />

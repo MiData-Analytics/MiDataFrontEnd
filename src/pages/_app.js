@@ -9,6 +9,9 @@ export default function App({ Component, pageProps }) {
         stopDelayMs={200}
         height={3}
         showOnShallow={true}
+        options={{
+          showSpinner: false,
+        }}
       />
       <Component {...pageProps} />
     </>
