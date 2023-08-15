@@ -47,20 +47,13 @@ const login = [
 
 export function Sidebar() {
   function NavLink({ url, title, icon }) {
-    const [active, setActive] = useState(false);
     const { pathname } = useRouter();
-
-    useEffect(() => {
-      if (pathname === url) {
-        setActive(true);
-      }
-    }, []);
 
     return (
       <Link href={url}>
         <div
           className={`flex justify-start gap-4 items-center border w-56 mx-auto p-3  py-5 rounded-xl ${
-            active ? "bg-[#6C3FEE] text-white" : ""
+            pathname === url ? "bg-[#6C3FEE] text-white" : ""
           } hover:bg-[#6C3FEE] hover:text-white hover:shadow-md hover:duration-300`}
         >
           {icon}
@@ -144,7 +137,6 @@ export function Header() {
   function Options({ icon, link }) {
     const { pathname } = useRouter();
 
-
     return (
       <div className="flex gap-2">
         <Link href="/dashboard">
@@ -201,5 +193,45 @@ export function Header() {
         </div>
       </nav>
     </>
+  );
+}
+
+export function CheckListSearch({ searchTerm,setSearchTerm }) {
+
+  return (
+    <div className="border px-2 py-3 rounded-md w-full flex items-center">
+      <Image src="/icons/searchnormal.svg" width={35} height={35} alt="Search Icon" />
+      <input
+        type="text"
+        name="searchTerm"
+        id="searchTerm"
+        placeholder="Search by name"
+        className="h-full px-2 py-3 w-full outline-none"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+    </div>
+  );
+}
+
+function CountDot({number}){
+  return <div className="w-[1.25rem] h-[1.25rem] bg-[#6C3FEE] text-white inline-flex justify-center items-center text-sm p-2 rounded-full">{number}</div>;
+}
+
+export function CheckListFilter(){
+  return (
+    <div className="w-40 border rounded-md flex justify-between items-center p-3 hover:cursor-pointer">
+      <div className="flex items-center justify-between gap-2">
+        <Image
+          src="/icons/filtersearch.svg"
+          width={25}
+          height={25}
+          alt="Filter Icon"
+          className="h-5 w-5 object-contain"
+        />
+        <p className="text-xs">Filter</p>
+      </div>
+      <CountDot number={3} />
+    </div>
   );
 }
