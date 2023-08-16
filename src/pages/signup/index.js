@@ -16,14 +16,79 @@ export default function SignUp() {
     password: "",
   });
   const [clearPassword, setClearPassword] = useState("password");
+  const [errors, setErrors] = useState([]);
+
+  const validatePassword = () => {
+    const { password } = formData;
+    const errors = [];
+
+    if (password.length < 6 || password.length > 25) {
+      errors.push("Password must be between 6 and 25 characters.");
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      errors.push("Password must contain at least one uppercase letter.");
+    }
+
+    if (!/[a-z]/.test(password)) {
+      errors.push("Password must contain at least one lowercase letter.");
+    }
+
+    if (!/\d/.test(password)) {
+      errors.push("Password must contain at least one number.");
+    }
+
+    if (!/[!@#$%^&*]/.test(password)) {
+      errors.push("Password must contain at least one symbol (!@#$%^&*).");
+    }
+
+    return errors;
+  };
 
   async function handleSubmit(e) {
     e.preventDefault();
-    const { password } = formData;
-    if(password.length < 8) {
-      return new Toast("Password is less than 8 characters");
+
+    const validationErrors = validatePassword();
+    setErrors(validationErrors);
+
+    if (validationErrors.length === 0) {
+      try {
+        new Toast("Registering User...");
+        const res = await axios.post(urls.signup, formData);
+
+        if (res.status === 200) {
+          setCookie("token", res.data.token, {
+            path: "/",
+            maxAge: 3600 * 24 * 30, // 30 days
+            sameSite: true,
+          });
+
+          new Toast("Sign Up Successful... Redirecting to Dashboard", {
+            timeout: 5000,
+            afterHide: () => push("/dashboard"),
+          });
+        }
+      } catch (error) {
+        console.error(error);
+        if (error.response.status === 400) {
+          new Toast("Email/Password can't be empty", {
+            timeout: 5000,
+          });
+        }
+
+        if (error.response.status === 500) {
+          new Toast("Server Error", {
+            timeout: 5000,
+          });
+        }
+
+        if (error.response.status === 409) {
+          new Toast("User with this Email already exists", {
+            timeout: 5000,
+          });
+        }
+      }
     }
-    new Toast("Registering User...");
   }
 
   function handleChange(e) {
@@ -101,6 +166,17 @@ export default function SignUp() {
               />
             )}
           </div>
+          {errors.length > 0 && (
+            <div>
+              <ul>
+                {errors.map((error, index) => (
+                  <li key={index} className="text-white text-center">
+                    {error}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
           <div className="flex justify-center">
             <Button type="submit">Create Account</Button>
           </div>
