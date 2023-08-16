@@ -348,14 +348,14 @@ export function SubmissionRateCard({ rate }) {
       <div className="flex justify-center gap-10 items-center">
         <Image
           src="/icons/infograph.svg"
-          width={250}
-          height={250}
+          width={235}
+          height={235}
           alt="Infograph"
         />
         <Image
           src="/icons/nigeria.svg"
-          width={250}
-          height={250}
+          width={235}
+          height={235}
           alt="Infograph"
         />
         <div className="flex flex-col text-[#636363]">
