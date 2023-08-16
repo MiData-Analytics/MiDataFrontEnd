@@ -9,6 +9,8 @@ import { urls } from "@/utils/urls";
 import Toast from "awesome-toast-component";
 import { Divider } from "@/components/Divider";
 import { FcGoogle } from "react-icons/fc";
+import { useRouter } from "next/router";
+import { useCookies } from "react-cookie";
 
 export default function Login() {
   const [formData, setFormData] = useState({
@@ -16,19 +18,50 @@ export default function Login() {
     password: "",
   });
   const [clearPassword, setClearPassword] = useState("password");
+  const { push } = useRouter();
+  const [cookies, setCookie] = useCookies(["token", "userType"]);
+
+  function clearFields() {
+    setFormData({ ...formData, emailAddress: "", password: "" });
+  }
 
   async function handleSubmit(e) {
+    new Toast("Attempting Login...",{
+      timeout:3000
+    });
     e.preventDefault();
-    // try {
-    //   const res = await axios.post(urls.login, formData);
 
-    //   if (res.status === 200) {
-    //     new Toast("Sign Up Successful");
-    //   }
-    // } catch (error) {
-    //   console.error(error);
-    // }
-    new Toast("Login...")
+    try {
+      const res = await axios.post(urls.login, formData);
+
+      if (res.status === 200) {
+        setCookie("token", res.data.token, {
+          path: "/",
+          maxAge: 3600 * 24 * 30, // 30 days
+          sameSite: true,
+        });
+
+        new Toast("Login Successful", {
+          timeout: 5000,
+          afterHide: () => push("/dashboard"),
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      if (error.response.status === 401) {
+        new Toast("Incorrect Email/Password, Please try Again", {
+          timeout: 3000,
+        });
+      }
+
+      if(error.response.status === 500){
+         new Toast("Server Error", {
+           timeout: 3000,
+         });
+      }
+
+      clearFields()
+    }
   }
 
   function handleChange(e) {
@@ -69,6 +102,8 @@ export default function Login() {
               id="emailAddress"
               className="w-full border rounded-full text-center p-2"
               onChange={handleChange}
+              value={formData.emailAddress}
+              required
             />
           </div>
           <div className="relative flex flex-col items-center w-full">
@@ -81,6 +116,8 @@ export default function Login() {
               id="password"
               className="p-2 w-full border rounded-full text-center"
               onChange={handleChange}
+              value={formData.password}
+              required
             />
             {clearPassword === "password" ? (
               <FiEyeOff
@@ -111,7 +148,7 @@ export default function Login() {
               type="button"
             >
               <FcGoogle size={25} />
-              Sign Up with Google
+              Sign In with Google
             </button>
           </div>
         </form>
