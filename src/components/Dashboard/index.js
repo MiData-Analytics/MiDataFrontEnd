@@ -21,6 +21,7 @@ import PropTypes from "prop-types";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import { useCookies } from "react-cookie";
 
 const firstLinks = [
   {
@@ -48,8 +49,10 @@ const secondLinks = [
   },
 ];
 
-
 export function Sidebar() {
+  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+
+  const { push } = useRouter();
   function NavLink({ url, title, icon }) {
     const { pathname } = useRouter();
 
@@ -65,6 +68,15 @@ export function Sidebar() {
         </div>
       </Link>
     );
+  }
+
+  function logOut() {
+    removeCookie("token", {
+      path: "/",
+      maxAge: 3600 * 24 * 3,
+      sameSite: true,
+    });
+    push("/login");
   }
 
   return (
@@ -120,6 +132,7 @@ export function Sidebar() {
           <div className="flex flex-col gap-10 w-full place-items mt-10 cursor-pointer">
             <div
               className={`flex justify-start gap-4 items-center border w-56 mx-auto p-3  py-5 rounded-xl hover:bg-[#6C3FEE] hover:text-white hover:shadow-md hover:duration-300`}
+              onClick={logOut}
             >
               <FiLogOut size={25} />
               Logout
