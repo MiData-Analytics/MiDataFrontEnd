@@ -1170,7 +1170,7 @@ postcss@8.4.27, postcss@^8.4.23:
     picocolors "^1.0.0"
     source-map-js "^1.0.2"
 
-prop-types@^15.6.2, prop-types@^15.8.1:
+prop-types@^15.6.0, prop-types@^15.6.2, prop-types@^15.8.1:
   version "15.8.1"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
   integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
@@ -1299,6 +1299,14 @@ source-map@^0.5.7:
   version "0.5.7"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.5.7.tgz#8a039d2d1021d22d1ea14c80d8ea468ba2ef3fcc"
   integrity sha512-LbrmJOMUSdEVxIKvdcJzQC+nQhe8FUZQTXQy6+I75skNgn3OoQ0DZA8YnFa7gp8tqtL3KPf1kmo0R5DoApeSGQ==
+
+spc-react-google-login@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/spc-react-google-login/-/spc-react-google-login-1.0.0.tgz#ee2dc2ea63745bc90fde324f29599f1c86387b50"
+  integrity sha512-Oiuz+5ZCHNZS3M6dJJytC+yHuereGXA+v+/zj/jl14IIWnb7LrusJ230Pni3hHehr94tfbeyS+8m0uqmV3ncNA==
+  dependencies:
+    "@types/react" "*"
+    prop-types "^15.6.0"
 
 streamsearch@^1.1.0:
   version "1.1.0"
