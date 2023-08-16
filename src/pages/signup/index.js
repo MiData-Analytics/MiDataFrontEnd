@@ -56,7 +56,7 @@ export default function SignUp() {
         new Toast("Registering User...");
         const res = await axios.post(urls.signup, formData);
 
-        if (res.status === 200) {
+        if (res.status === 201) {
           setCookie("token", res.data.token, {
             path: "/",
             maxAge: 3600 * 24 * 30, // 30 days
@@ -65,28 +65,32 @@ export default function SignUp() {
 
           new Toast("Sign Up Successful... Redirecting to Dashboard", {
             timeout: 5000,
-            afterHide: () => push("/dashboard"),
           });
+          push("/dashboard");
         }
       } catch (error) {
         console.error(error);
-        if (error.response.status === 400) {
-          new Toast("Email/Password can't be empty", {
-            timeout: 5000,
-          });
+        if (error.response) {
+          if (error.response.status === 400) {
+            new Toast("Email/Password can't be empty", {
+              timeout: 5000,
+            });
+          }
+
+          if (error.response.status === 500) {
+            new Toast("Server Error", {
+              timeout: 5000,
+            });
+          }
+
+          if (error.response.status === 409) {
+            new Toast("User with this Email already exists", {
+              timeout: 5000,
+            });
+          }
         }
 
-        if (error.response.status === 500) {
-          new Toast("Server Error", {
-            timeout: 5000,
-          });
-        }
-
-        if (error.response.status === 409) {
-          new Toast("User with this Email already exists", {
-            timeout: 5000,
-          });
-        }
+        new Toast("Server Error");
       }
     }
   }

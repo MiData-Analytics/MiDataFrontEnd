@@ -274,7 +274,7 @@ export function Countdown() {
   }, []);
 
   return (
-    <div className="shadow-md flex flex-col items-center border justify-center rounded-[30px] bg-[#fff] h-[18rem] text-[#707070]">
+    <div className="shadow-md flex flex-col items-center border justify-center rounded-[30px] bg-[#fff] h-[16rem] text-[#707070]">
       <div className="flex flex-col items-center justify-between">
         <h3 className="text-[#9B75D5] font-medium">Deadline</h3>
         <div>
@@ -299,7 +299,7 @@ export function Countdown() {
 
 export function MonitorCountCard({ count }) {
   return (
-    <div className="shadow-md shadow-[#6C3FEE] flex flex-col items-center justify-center rounded-[30px] bg-[#6C3FEE] py-[6rem] px-[3rem] text-white h-[18rem] border-[#6C3FEE]">
+    <div className="shadow-md shadow-[#6C3FEE] flex flex-col items-center justify-center rounded-[30px] bg-[#6C3FEE] py-[6rem] px-[3rem] text-white h-[16rem] border-[#6C3FEE]">
       <p className="text-3xl">{count}</p>
       <p className="text-3xl">{count > 1 ? "Monitors" : "Monitor"}</p>
     </div>
@@ -352,7 +352,7 @@ export default function CircularWithValueLabel() {
 
 export function SubmissionRateCard({ rate }) {
   return (
-    <div className="shadow-md flex flex-col border rounded-[30px] bg-[#fff] h-[18rem] w-4/6 text-[#9B75D5]">
+    <div className="shadow-md flex flex-col border rounded-[30px] bg-[#fff] h-[16rem] w-4/6 text-[#9B75D5]">
       <div className="border-b w-5/6 mx-auto mt-3">
         <h3 className="text-[#9B75D5] font-medium text-xl text-center">
           Submission Rate
@@ -361,14 +361,14 @@ export function SubmissionRateCard({ rate }) {
       <div className="flex justify-center gap-10 items-center">
         <Image
           src="/icons/infograph.svg"
-          width={235}
-          height={235}
+          width={210}
+          height={210}
           alt="Infograph"
         />
         <Image
           src="/icons/nigeria.svg"
-          width={235}
-          height={235}
+          width={210}
+          height={210}
           alt="Infograph"
         />
         <div className="flex flex-col text-[#636363]">
@@ -397,15 +397,51 @@ export function SubmissionRateCard({ rate }) {
 }
 
 export function WorkBoard() {
+  const [option, setOption] = useState("Visualization Options");
+  const [showOptions, setShowOptions] = useState(false);
+
+  const options = [
+    {
+      value: "Question",
+    },
+    {
+      value: "Monitor Response",
+    },
+    {
+      value: "Individual Response",
+    },
+  ];
+
   return (
     <div className="w-full flex flex-col items-center justify-start border rounded-lg shadow-md min-h-[80vh] h-fit mt-3">
       <div className="flex justify-around rounded-t-lg bg-[#6C3FEE] items-center h-12 gap-5 w-full">
         <h3 className="font-semibold sm:text-3xl text-white">
           Early Warning Signs
         </h3>
-        <div className="inline-flex items-center bg-[#D9D9D9] sm:w-60 w-32 justify-between rounded-md px-2 py-1 hover:cursor-pointer sm:text-base text-[5px]">
-          Visualization Options
+        <div
+          className="inline-flex items-center bg-[#D9D9D9] sm:w-60 w-32 justify-between rounded-md px-2 py-1 hover:cursor-pointer sm:text-base text-[0.5rem] relative"
+          onClick={() => setShowOptions(!showOptions)}
+        >
+          {option}
           <AiFillCaretDown size={15} />
+          {showOptions && (
+            <div className="absolute top-8 left-0 bg-primary h-32 w-full flex flex-col items-first text-white justify-between">
+              {options.map((option, index) => {
+                return (
+                  <p
+                    className="border-b w-full h-full hover:bg-white hover:text-primary inline-flex justify-start pl-2 items-center"
+                    key={index}
+                    onClick={() => {
+                      setOption(option.value);
+                      setShowOptions(false);
+                    }}
+                  >
+                    {option.value}
+                  </p>
+                );
+              })}
+            </div>
+          )}
         </div>
       </div>
       {/* PC View  */}

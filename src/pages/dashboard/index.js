@@ -1,9 +1,13 @@
+import { useContext } from "react";
 import { DashboardLayout } from "@/layouts/Dashboard";
 import Head from "next/head";
 import { AiFillCaretDown } from "react-icons/ai";
 import { WorkBoard } from "@/components/Dashboard";
+import { UserContext } from "@/contexts/UserContext";
 
 export default function Dashboard() {
+  const { userData, isLoading, isError } = useContext(UserContext);
+
   return (
     <DashboardLayout>
       <Head>

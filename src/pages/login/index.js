@@ -26,9 +26,7 @@ export default function Login() {
   }
 
   async function handleSubmit(e) {
-    new Toast("Attempting Login...",{
-      timeout:3000
-    });
+    new Toast("Attempting Login...");
     e.preventDefault();
 
     try {
@@ -43,24 +41,29 @@ export default function Login() {
 
         new Toast("Login Successful", {
           timeout: 5000,
-          afterHide: () => push("/dashboard"),
         });
+        push("/dashboard");
       }
     } catch (error) {
-      console.error(error);
-      if (error.response.status === 401) {
-        new Toast("Incorrect Email/Password, Please try Again", {
-          timeout: 3000,
-        });
+      if (error.response) {
+        if (error.response.status === 401) {
+          new Toast("Incorrect Email/Password, Please try Again", {
+            timeout: 5000,
+          });
+        }
+
+        if (error.response.status === 500) {
+          new Toast("Server Error", {
+            timeout: 5000,
+          });
+        }
       }
 
-      if(error.response.status === 500){
-         new Toast("Server Error", {
-           timeout: 3000,
-         });
+      if (error) {
+        new Toast(
+          "Server is Unavailable at this time... Please Try again later..."
+        );
       }
-
-      clearFields()
     }
   }
 
