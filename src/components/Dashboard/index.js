@@ -48,13 +48,6 @@ const secondLinks = [
   },
 ];
 
-const login = [
-  {
-    url: "/logout",
-    title: "Logout",
-    icon: <FiLogOut size={25} />,
-  },
-];
 
 export function Sidebar() {
   function NavLink({ url, title, icon }) {
@@ -124,17 +117,13 @@ export function Sidebar() {
               );
             })}
           </div>
-          <div className="flex flex-col gap-10 w-full place-items mt-10">
-            {login.map((link, index) => {
-              return (
-                <NavLink
-                  key={index}
-                  url={link.url}
-                  title={link.title}
-                  icon={link.icon}
-                />
-              );
-            })}
+          <div className="flex flex-col gap-10 w-full place-items mt-10 cursor-pointer">
+            <div
+              className={`flex justify-start gap-4 items-center border w-56 mx-auto p-3  py-5 rounded-xl hover:bg-[#6C3FEE] hover:text-white hover:shadow-md hover:duration-300`}
+            >
+              <FiLogOut size={25} />
+              Logout
+            </div>
           </div>
         </div>
       </nav>
