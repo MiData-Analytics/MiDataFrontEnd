@@ -184,7 +184,7 @@ export function Header() {
         <Options />
         <p className="text-xs">Kimpact Development Initiative</p>
       </nav>
-      <nav className="w-full h-20 bg-white shadow-md flex items-center p-3 justify-between lg:flex hidden">
+      <nav className="w-full h-20 bg-white shadow-md items-center p-3 justify-between lg:flex hidden">
         <div className="flex items-center justify-center gap-5">
           <AiOutlineMenu size={35} className="hover:cursor-pointer" />
           <div className="w-3/2">
