@@ -248,7 +248,7 @@ export function CheckListFilter() {
           width={25}
           height={25}
           alt="Filter Icon"
-          className="h-5 w-5 object-contain"
+          className="sm:h-8 sm:w-8 h-5 w-5 object-contain"
         />
         <p className="text-xs">Filter</p>
       </div>
