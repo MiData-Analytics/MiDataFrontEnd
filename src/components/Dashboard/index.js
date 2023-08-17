@@ -53,6 +53,7 @@ export function Sidebar() {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
   const { push } = useRouter();
+
   function NavLink({ url, title, icon }) {
     const { pathname } = useRouter();
 
@@ -68,6 +69,14 @@ export function Sidebar() {
         </div>
       </Link>
     );
+  }
+
+  function MobileNav(){
+
+  }
+
+  function SearchModal(){
+    
   }
 
   function logOut() {
@@ -274,7 +283,7 @@ export function Countdown() {
   }, []);
 
   return (
-    <div className="shadow-md flex flex-col items-center border justify-center rounded-[30px] bg-[#fff] h-[16rem] text-[#707070]">
+    <div className="shadow-md flex flex-col items-center border justify-center rounded-[30px] bg-[#fff] sm:h-[16rem] h-fit sm:w-1/6 w-5/6 text-[#707070]">
       <div className="flex flex-col items-center justify-between">
         <h3 className="text-[#9B75D5] font-medium">Deadline</h3>
         <div>
@@ -299,7 +308,7 @@ export function Countdown() {
 
 export function MonitorCountCard({ count }) {
   return (
-    <div className="shadow-md shadow-[#6C3FEE] flex flex-col items-center justify-center rounded-[30px] bg-[#6C3FEE] py-[6rem] px-[3rem] text-white h-[16rem] border-[#6C3FEE]">
+    <div className="shadow-md shadow-[#6C3FEE] flex flex-col items-center justify-center rounded-[30px] bg-[#6C3FEE] py-[6rem] px-[3rem] text-white sm:h-[16rem] h-fit sm:w-1/6 w-5/6 border-[#6C3FEE]">
       <p className="text-3xl">{count}</p>
       <p className="text-3xl">{count > 1 ? "Monitors" : "Monitor"}</p>
     </div>
@@ -352,13 +361,13 @@ export default function CircularWithValueLabel() {
 
 export function SubmissionRateCard({ rate }) {
   return (
-    <div className="shadow-md flex flex-col border rounded-[30px] bg-[#fff] h-[16rem] w-4/6 text-[#9B75D5]">
+    <div className="shadow-md flex flex-col border rounded-[30px] bg-[#fff] sm:h-[16rem] h-fit sm:w-4/6 w-5/6 text-[#9B75D5] gap-3">
       <div className="border-b w-5/6 mx-auto mt-3">
         <h3 className="text-[#9B75D5] font-medium text-xl text-center">
           Submission Rate
         </h3>
       </div>
-      <div className="flex justify-center gap-10 items-center">
+      <div className="flex sm:flex-row flex-col justify-center gap-10 items-center">
         <Image
           src="/icons/infograph.svg"
           width={210}
@@ -445,7 +454,7 @@ export function WorkBoard() {
         </div>
       </div>
       {/* PC View  */}
-      <div className="flex w-full m-3 gap-x-3 justify-between items-center p-3 sm:flex-row flex-col">
+      <div className="flex w-full m-3 gap-3 justify-between items-center p-3 sm:flex-row flex-col">
         <MonitorCountCard count={600} />
         <SubmissionRateCard />
         <Countdown />
