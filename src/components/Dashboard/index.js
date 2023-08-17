@@ -209,7 +209,7 @@ export function Header() {
   );
 }
 
-export function CheckListSearch({ searchTerm, setSearchTerm }) {
+export function SearchBar({ searchTerm, setSearchTerm }) {
   return (
     <div className="border px-2 py-3 rounded-md w-full flex items-center">
       <Image
@@ -239,7 +239,7 @@ function CountDot({ number }) {
   );
 }
 
-export function CheckListFilter() {
+export function Filter() {
   return (
     <div className="w-40 border rounded-md flex justify-between items-center p-3 hover:cursor-pointer">
       <div className="flex items-center justify-between gap-2">
