@@ -100,7 +100,11 @@ export default function SignUp() {
           }
         }
 
-        new Toast("Server Error");
+        if (error && !error.response) {
+          new Toast(
+            "Server is Unavailable at this time... Please Try again later..."
+          );
+        }
       }
     }
   }
