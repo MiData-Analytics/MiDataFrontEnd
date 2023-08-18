@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { LuLayoutDashboard } from "react-icons/lu";
@@ -22,6 +22,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useCookies } from "react-cookie";
+import { UserContext } from "@/contexts/UserContext";
 
 const firstLinks = [
   {
@@ -71,13 +72,9 @@ export function Sidebar() {
     );
   }
 
-  function MobileNav(){
+  function MobileNav() {}
 
-  }
-
-  function SearchModal(){
-    
-  }
+  function SearchModal() {}
 
   function logOut() {
     removeCookie("token", {
@@ -155,6 +152,7 @@ export function Sidebar() {
 
 export function Header() {
   const [searchTerm, setSearchTerm] = useState("");
+  const { userData, isError, isLoading } = useContext(UserContext);
 
   function Options({ icon, link }) {
     const { pathname } = useRouter();
@@ -193,7 +191,7 @@ export function Header() {
     <>
       <nav className="w-full lg:hidden flex justify-between border-b items-center py-3 gap-1 px-1">
         <Options />
-        <p className="text-xs">Kimpact Development Initiative</p>
+        <p className="text-xs">{`${userData.firstName} ${userData.lastName}`}</p>
       </nav>
       <nav className="w-full h-20 bg-white shadow-md items-center p-3 justify-between lg:flex hidden">
         <div className="flex items-center justify-center gap-5">
@@ -210,7 +208,7 @@ export function Header() {
         </div>
         <div className="w-fit">
           <p className="inline-flex items-center gap-2 hover:cursor-pointer">
-            Kimpact Development Initiative <AiFillCaretDown size={15} />
+            {`${userData.firstName} ${userData.lastName}`} <AiFillCaretDown size={15} />
           </p>
         </div>
       </nav>
