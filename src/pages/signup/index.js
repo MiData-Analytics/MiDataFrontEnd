@@ -9,14 +9,24 @@ import { urls } from "@/utils/urls";
 import Toast from "awesome-toast-component";
 import { Divider } from "@/components/Divider";
 import { FcGoogle } from "react-icons/fc";
+import { useCookies } from "react-cookie";
+import { useRouter } from "next/router";
 
 export default function SignUp() {
   const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
     emailAddress: "",
     password: "",
   });
   const [clearPassword, setClearPassword] = useState("password");
   const [errors, setErrors] = useState([]);
+  const [cookies, setCookie] = useCookies(["token"]);
+  const { push } = useRouter();
+
+  const clearFields = () => {
+    setFormData({ ...formData, password: "" });
+  };
 
   const validatePassword = () => {
     const { password } = formData;
@@ -129,6 +139,34 @@ export default function SignUp() {
           onSubmit={handleSubmit}
           className="my-2 space-y-3 sm:w-[380px] w-full p-2"
         >
+          <div className="flex flex-col items-center w-full">
+            <label htmlFor="firstName" className="font-bold text-xl">
+              First Name
+            </label>
+            <input
+              type="text"
+              name="firstName"
+              id="firstName"
+              className="w-full border rounded-full text-center p-2 text-black"
+              onChange={handleChange}
+              value={formData.firstName}
+              required
+            />
+          </div>
+          <div className="flex flex-col items-center w-full">
+            <label htmlFor="lastName" className="font-bold text-xl">
+              Last Name
+            </label>
+            <input
+              type="text"
+              name="lastName"
+              id="lastName"
+              className="w-full border rounded-full text-center p-2 text-black"
+              onChange={handleChange}
+              value={formData.lastName}
+              required
+            />
+          </div>
           <div className="flex flex-col items-center w-full">
             <label htmlFor="emailAddress" className="font-bold text-xl">
               Email
