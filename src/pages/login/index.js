@@ -19,7 +19,7 @@ export default function Login() {
   });
   const [clearPassword, setClearPassword] = useState("password");
   const { push } = useRouter();
-  const [cookies, setCookie] = useCookies(["token", "userType"]);
+  const [cookies, setCookie] = useCookies(["token"]);
 
   function clearFields() {
     setFormData({ ...formData, emailAddress: "", password: "" });
