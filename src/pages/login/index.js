@@ -19,7 +19,7 @@ export default function Login() {
   });
   const [clearPassword, setClearPassword] = useState("password");
   const { push } = useRouter();
-  const [cookies, setCookie] = useCookies(["token", "userType"]);
+  const [cookies, setCookie] = useCookies(["token"]);
 
   function clearFields() {
     setFormData({ ...formData, emailAddress: "", password: "" });
@@ -59,7 +59,7 @@ export default function Login() {
         }
       }
 
-      if (error) {
+      if (error && !error.response) {
         new Toast(
           "Server is Unavailable at this time... Please Try again later..."
         );

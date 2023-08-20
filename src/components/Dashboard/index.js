@@ -22,6 +22,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useCookies } from "react-cookie";
+import { useGetProfile } from "@/hooks/useGetProfile";
 
 const firstLinks = [
   {
@@ -53,6 +54,7 @@ export function Sidebar() {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
 
   const { push } = useRouter();
+
   function NavLink({ url, title, icon }) {
     const { pathname } = useRouter();
 
@@ -69,6 +71,10 @@ export function Sidebar() {
       </Link>
     );
   }
+
+  function MobileNav() {}
+
+  function SearchModal() {}
 
   function logOut() {
     removeCookie("token", {
@@ -146,6 +152,7 @@ export function Sidebar() {
 
 export function Header() {
   const [searchTerm, setSearchTerm] = useState("");
+  const { userData } = useGetProfile();
 
   function Options({ icon, link }) {
     const { pathname } = useRouter();
@@ -184,7 +191,9 @@ export function Header() {
     <>
       <nav className="w-full lg:hidden flex justify-between border-b items-center py-3 gap-1 px-1">
         <Options />
-        <p className="text-xs">Kimpact Development Initiative</p>
+        {userData && (
+          <p className="text-xs">{`${userData?.firstName} ${userData?.lastName}`}</p>
+        )}
       </nav>
       <nav className="w-full h-20 bg-white shadow-md items-center p-3 justify-between lg:flex hidden">
         <div className="flex items-center justify-center gap-5">
@@ -200,16 +209,19 @@ export function Header() {
           </div>
         </div>
         <div className="w-fit">
-          <p className="inline-flex items-center gap-2 hover:cursor-pointer">
-            Kimpact Development Initiative <AiFillCaretDown size={15} />
-          </p>
+          {userData && (
+            <p className="inline-flex items-center gap-2 hover:cursor-pointer">
+              {`${userData?.firstName} ${userData?.lastName}`}
+              <AiFillCaretDown size={15} />
+            </p>
+          )}
         </div>
       </nav>
     </>
   );
 }
 
-export function CheckListSearch({ searchTerm, setSearchTerm }) {
+export function SearchBar({ searchTerm, setSearchTerm }) {
   return (
     <div className="border px-2 py-3 rounded-md w-full flex items-center">
       <Image
@@ -239,7 +251,7 @@ function CountDot({ number }) {
   );
 }
 
-export function CheckListFilter() {
+export function Filter() {
   return (
     <div className="w-40 border rounded-md flex justify-between items-center p-3 hover:cursor-pointer">
       <div className="flex items-center justify-between gap-2">
@@ -248,7 +260,7 @@ export function CheckListFilter() {
           width={25}
           height={25}
           alt="Filter Icon"
-          className="h-5 w-5 object-contain"
+          className="sm:h-8 sm:w-8 h-5 w-5 object-contain"
         />
         <p className="text-xs">Filter</p>
       </div>
@@ -274,7 +286,7 @@ export function Countdown() {
   }, []);
 
   return (
-    <div className="shadow-md flex flex-col items-center border justify-center rounded-[30px] bg-[#fff] h-[16rem] text-[#707070]">
+    <div className="shadow-md flex flex-col items-center border justify-center rounded-[30px] bg-[#fff] sm:h-[16rem] h-fit sm:w-1/6 w-5/6 text-[#707070]">
       <div className="flex flex-col items-center justify-between">
         <h3 className="text-[#9B75D5] font-medium">Deadline</h3>
         <div>
@@ -299,7 +311,7 @@ export function Countdown() {
 
 export function MonitorCountCard({ count }) {
   return (
-    <div className="shadow-md shadow-[#6C3FEE] flex flex-col items-center justify-center rounded-[30px] bg-[#6C3FEE] py-[6rem] px-[3rem] text-white h-[16rem] border-[#6C3FEE]">
+    <div className="shadow-md shadow-[#6C3FEE] flex flex-col items-center justify-center rounded-[30px] bg-[#6C3FEE] py-[6rem] px-[3rem] text-white sm:h-[16rem] h-fit sm:w-1/6 w-5/6 border-[#6C3FEE]">
       <p className="text-3xl">{count}</p>
       <p className="text-3xl">{count > 1 ? "Monitors" : "Monitor"}</p>
     </div>
@@ -352,13 +364,13 @@ export default function CircularWithValueLabel() {
 
 export function SubmissionRateCard({ rate }) {
   return (
-    <div className="shadow-md flex flex-col border rounded-[30px] bg-[#fff] h-[16rem] w-4/6 text-[#9B75D5]">
+    <div className="shadow-md flex flex-col border rounded-[30px] bg-[#fff] sm:h-[16rem] h-fit sm:w-4/6 w-5/6 text-[#9B75D5] gap-3">
       <div className="border-b w-5/6 mx-auto mt-3">
         <h3 className="text-[#9B75D5] font-medium text-xl text-center">
           Submission Rate
         </h3>
       </div>
-      <div className="flex justify-center gap-10 items-center">
+      <div className="flex sm:flex-row flex-col justify-center gap-10 items-center">
         <Image
           src="/icons/infograph.svg"
           width={210}
@@ -445,7 +457,7 @@ export function WorkBoard() {
         </div>
       </div>
       {/* PC View  */}
-      <div className="flex w-full m-3 gap-x-3 justify-between items-center p-3 sm:flex-row flex-col">
+      <div className="flex w-full m-3 gap-3 justify-between items-center p-3 sm:flex-row flex-col">
         <MonitorCountCard count={600} />
         <SubmissionRateCard />
         <Countdown />
