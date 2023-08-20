@@ -31,6 +31,7 @@ export const Modal = ({ isOpen, onClose }) => {
       if (res.status === 200) {
         onClose();
         setLoading(false);
+        new Toast("Successfully updated profile...")
       }
     } catch (error) {
       console.error(error);
