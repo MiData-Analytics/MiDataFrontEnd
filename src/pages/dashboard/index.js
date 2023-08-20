@@ -1,12 +1,24 @@
-import { useContext } from "react";
+import { useState, useEffect } from "react";
 import { DashboardLayout } from "@/layouts/Dashboard";
 import Head from "next/head";
 import { AiFillCaretDown } from "react-icons/ai";
 import { WorkBoard } from "@/components/Dashboard";
-import { UserContext } from "@/contexts/UserContext";
+import { Modal } from "@/components/Dashboard/Modal";
+import { useGetProfile } from "@/hooks/useGetProfile";
 
 export default function Dashboard() {
-  const { userData, isLoading, isError } = useContext(UserContext);
+  const [modal, setModal] = useState(false);
+  const { userData } = useGetProfile();
+
+  const closeModal = () => {
+    setModal(false);
+  };
+
+  useEffect(() => {
+    if (userData.userType === "") {
+      setModal(true);
+    }
+  }, [userData.userType]);
 
   return (
     <DashboardLayout>
@@ -20,6 +32,7 @@ export default function Dashboard() {
           <AiFillCaretDown size={15} />
         </div>
       </div>
+      <Modal isOpen={modal} onClose={closeModal} />
       <WorkBoard />
     </DashboardLayout>
   );
