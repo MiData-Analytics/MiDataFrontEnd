@@ -7,14 +7,49 @@ import { AiFillCaretDown } from "react-icons/ai";
 import { BsPlusLg } from "react-icons/bs";
 import Link from "next/link";
 import { useGetMonitors } from "@/hooks/useGetMonitors";
+import { useRouter } from "next/router";
+import { urls } from "@/utils/urls";
+import Toast from "awesome-toast-component";
+import { useCookie } from "@/hooks/useCookie";
+import axios from "axios";
 
 export default function Monitors() {
   const [searchTerm, setSearchTerm] = useState("");
   const { monitors } = useGetMonitors();
+  const { push, reload } = useRouter();
+  const { token } = useCookie();
 
-  function handleEdit() {}
+  function handleEdit(id) {
+    push(`/dashboard/monitors/${id}`)
+  }
 
-  function handleDelete() {}
+  async function handleDelete(id) {
+    try {
+      const response = await axios.delete(`${urls.deleteMonitor}${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 200) {
+        new Toast("Successfully deleted Monitor account... Refreshing...", {
+          afterHide: () => reload(),
+        });
+      }
+    } catch (error) {
+      if (error.response && error.response === 500) {
+        new Toast(
+          "There was a problem trying to delete that monitor... please try again later"
+        );
+      }
+
+      if (error.response && error.response === 404) {
+        new Toast(
+          "Seems that MiData Monitor has already been deleted, please refresh the dashboard..."
+        );
+      }
+    }
+  }
 
   return (
     <DashboardLayout>
@@ -69,7 +104,7 @@ export default function Monitors() {
               {monitors.map((monitor, index) => (
                 <TableRow
                   key={index}
-                  serialNumber={index}
+                  serialNumber={index + 1}
                   firstName={monitor.firstName}
                   lastName={monitor.lastName}
                   contactNumber={monitor.phoneNumber}
