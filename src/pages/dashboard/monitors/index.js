@@ -20,7 +20,7 @@ export default function Monitors() {
   const { token } = useCookie();
 
   function handleEdit(id) {
-    push(`/dashboard/monitors/${id}`)
+    push(`/dashboard/monitors/${id}`);
   }
 
   async function handleDelete(id) {
@@ -101,20 +101,25 @@ export default function Monitors() {
               </tr>
             </thead>
             <tbody className="max-h-[80vh]">
-              {monitors.map((monitor, index) => (
-                <TableRow
-                  key={index}
-                  serialNumber={index + 1}
-                  firstName={monitor.firstName}
-                  lastName={monitor.lastName}
-                  contactNumber={monitor.phoneNumber}
-                  email={monitor.emailAddress}
-                  dateAdded={monitor.dateCreated}
-                  onEdit={() => handleEdit(monitor.id)}
-                  onDelete={() => handleDelete(monitor.id)}
-                  isGrey={index % 2 === 0}
-                />
-              ))}
+              {monitors.map((monitor, index) => {
+                const fullName = `${monitor?.firstName?.toLowerCase()} ${monitor?.lastName?.toLowerCase()}`;
+                if (fullName.includes(searchTerm.toLocaleLowerCase())) {
+                  return (
+                    <TableRow
+                      key={index}
+                      serialNumber={index + 1}
+                      firstName={monitor.firstName}
+                      lastName={monitor.lastName}
+                      contactNumber={monitor.phoneNumber}
+                      email={monitor.emailAddress}
+                      dateAdded={monitor.dateCreated}
+                      onEdit={() => handleEdit(monitor.id)}
+                      onDelete={() => handleDelete(monitor.id)}
+                      isGrey={index % 2 === 0}
+                    />
+                  );
+                }
+              })}
             </tbody>
           </table>
         </div>
