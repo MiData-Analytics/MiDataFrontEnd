@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { LuLayoutDashboard } from "react-icons/lu";
@@ -22,7 +22,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useCookies } from "react-cookie";
-import { UserContext } from "@/contexts/UserContext";
+import { useGetProfile } from "@/hooks/useGetProfile";
 
 const firstLinks = [
   {
@@ -152,7 +152,7 @@ export function Sidebar() {
 
 export function Header() {
   const [searchTerm, setSearchTerm] = useState("");
-  const { userData, isError, isLoading } = useContext(UserContext);
+  const { userData } = useGetProfile();
 
   function Options({ icon, link }) {
     const { pathname } = useRouter();
@@ -191,7 +191,9 @@ export function Header() {
     <>
       <nav className="w-full lg:hidden flex justify-between border-b items-center py-3 gap-1 px-1">
         <Options />
-        <p className="text-xs">{`${userData.firstName} ${userData.lastName}`}</p>
+        {userData && (
+          <p className="text-xs">{`${userData?.firstName} ${userData?.lastName}`}</p>
+        )}
       </nav>
       <nav className="w-full h-20 bg-white shadow-md items-center p-3 justify-between lg:flex hidden">
         <div className="flex items-center justify-center gap-5">
@@ -207,9 +209,12 @@ export function Header() {
           </div>
         </div>
         <div className="w-fit">
-          <p className="inline-flex items-center gap-2 hover:cursor-pointer">
-            {`${userData.firstName} ${userData.lastName}`} <AiFillCaretDown size={15} />
-          </p>
+          {userData && (
+            <p className="inline-flex items-center gap-2 hover:cursor-pointer">
+              {`${userData?.firstName} ${userData?.lastName}`}
+              <AiFillCaretDown size={15} />
+            </p>
+          )}
         </div>
       </nav>
     </>
