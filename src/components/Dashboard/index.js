@@ -23,6 +23,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { useCookies } from "react-cookie";
 import { useGetProfile } from "@/hooks/useGetProfile";
+import { useGetMonitors } from "@/hooks/useGetMonitors";
 
 const firstLinks = [
   {
@@ -313,7 +314,11 @@ export function MonitorCountCard({ count }) {
   return (
     <div className="shadow-md shadow-[#6C3FEE] flex flex-col items-center justify-center rounded-[30px] bg-[#6C3FEE] py-[6rem] px-[3rem] text-white sm:h-[16rem] h-fit sm:w-1/6 w-5/6 border-[#6C3FEE]">
       <p className="text-3xl">{count}</p>
-      <p className="text-3xl">{count > 1 ? "Monitors" : "Monitor"}</p>
+      <p className="text-3xl">
+        {count > 1 && "Monitors"}
+        {count === 0 && "Monitors"}
+        {count === 1 && "Monitor"}
+      </p>
     </div>
   );
 }
@@ -411,6 +416,7 @@ export function SubmissionRateCard({ rate }) {
 export function WorkBoard() {
   const [option, setOption] = useState("Visualization Options");
   const [showOptions, setShowOptions] = useState(false);
+  const { monitors } = useGetMonitors();
 
   const options = [
     {
@@ -458,7 +464,7 @@ export function WorkBoard() {
       </div>
       {/* PC View  */}
       <div className="flex w-full m-3 gap-3 justify-between items-center p-3 sm:flex-row flex-col">
-        <MonitorCountCard count={600} />
+        <MonitorCountCard count={monitors.length} />
         <SubmissionRateCard />
         <Countdown />
       </div>
