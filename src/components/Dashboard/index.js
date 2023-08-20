@@ -312,14 +312,19 @@ export function Countdown() {
 
 export function MonitorCountCard({ count }) {
   return (
-    <div className="shadow-md shadow-[#6C3FEE] flex flex-col items-center justify-center rounded-[30px] bg-[#6C3FEE] py-[6rem] px-[3rem] text-white sm:h-[16rem] h-fit sm:w-1/6 w-5/6 border-[#6C3FEE]">
-      <p className="text-3xl">{count}</p>
-      <p className="text-3xl">
-        {count > 1 && "Monitors"}
-        {count === 0 && "Monitors"}
-        {count === 1 && "Monitor"}
-      </p>
-    </div>
+    <Link
+      href="/dashboard/monitors"
+      className="sm:h-[16rem] h-fit sm:w-1/6 w-5/6 "
+    >
+      <div className="shadow-md shadow-[#6C3FEE] flex flex-col items-center justify-center rounded-[30px] bg-[#6C3FEE] py-[6rem] px-[3rem] text-white border-[#6C3FEE]">
+        <p className="text-3xl">{count}</p>
+        <p className="text-3xl">
+          {count > 1 && "Monitors"}
+          {count === 0 && "Monitors"}
+          {count === 1 && "Monitor"}
+        </p>
+      </div>
+    </Link>
   );
 }
 
