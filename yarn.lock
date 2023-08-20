@@ -1127,6 +1127,11 @@ lines-and-columns@^1.1.6:
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.2.4.tgz#eca284f75d2965079309dc0ad9255abb2ebc1632"
   integrity sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==
 
+locations-ng@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/locations-ng/-/locations-ng-1.0.1.tgz#503d9c73601f45e36a2c351115cd098c29bdd232"
+  integrity sha512-kbIho8Fs7wb+9ZHc798TcHl0ictKBorIoUKTxWO+zikV40Yol2aFLqvGekb1m7TwhPFO9fUHImKEd2MrriulWA==
+
 lodash@^4.17.21:
   version "4.17.21"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
@@ -1244,11 +1249,6 @@ nextjs-progressbar@^0.0.16:
     "@types/nprogress" "^0.2.0"
     nprogress "^0.2.0"
     prop-types "^15.8.1"
-
-nigeria-states-lgas@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/nigeria-states-lgas/-/nigeria-states-lgas-0.0.2.tgz#4341e735d902ba3aa5a854ea0b78548c81e46af9"
-  integrity sha512-VzuqdoRsm1Dd+Rz3D8k2zsit7g66vKec3bTwHbAooKT3jiKwoaP3p1F7SvZeKYO1UbFQ0xx0KxgZvNJsX45R0A==
 
 node-releases@^2.0.13:
   version "2.0.13"
