@@ -138,7 +138,7 @@ export default function Monitors() {
                 </tbody>
               </table>
             </div>
-            <div className="w-full flex items-center justify-end">
+            <div className="w-full flex items-center justify-end mt-5">
               <Link href="/dashboard/monitors/add">
                 <Image
                   src="/icons/add_fab.svg"
