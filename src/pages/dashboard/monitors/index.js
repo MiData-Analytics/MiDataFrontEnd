@@ -80,6 +80,7 @@ export default function Monitors() {
               {monitors.length}
             </span>{" "}
             {monitors.length > 1 && "Monitors"}
+            {monitors.length === 1 && "Monitor"}
             {monitors.length === 0 && "Monitors"}
           </p>
 
