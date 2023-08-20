@@ -45,7 +45,7 @@ export default function AddMonitor() {
     } catch (error) {
       if (error.response) {
         if (error.response.status === 401) {
-          new Toast("Unauthorized Access...");
+          new Toast("Unauthorized Action...");
         }
 
         if (error.response.status === 409) {
@@ -173,6 +173,7 @@ export default function AddMonitor() {
               placeholder="Contact Details"
               className="w-full px-3 py-2 border rounded-lg resize-none placeholder:text-black placeholder:font-thin"
               rows={7}
+              required
             ></textarea>
             <div>
               <button className="bg-[#6C3FEE] py-4 px-7 text-white rounded-md">
