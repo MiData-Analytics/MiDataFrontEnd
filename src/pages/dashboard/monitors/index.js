@@ -12,6 +12,7 @@ import { urls } from "@/utils/urls";
 import Toast from "awesome-toast-component";
 import { useCookie } from "@/hooks/useCookie";
 import axios from "axios";
+import Image from "next/image";
 
 export default function Monitors() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -78,7 +79,8 @@ export default function Monitors() {
             <span className="font-semibold text-primary">
               {monitors.length}
             </span>{" "}
-            {monitors.length > 1 ? "Monitors" : "Monitor"}
+            {monitors.length > 1 && "Monitors"}
+            {monitors.length === 0 && "Monitors"}
           </p>
 
           <p className="flex items-center font-semibold gap-2 hover:cursor-pointer">
@@ -89,40 +91,65 @@ export default function Monitors() {
             </span>
           </p>
         </div>
-        <div className="w-full overflow-x-auto">
-          <table className="w-full table-auto">
-            <thead>
-              <tr className="font-semibold">
-                <th className="px-4 py-2">S/N</th>
-                <th className="px-4 py-2">Full Name</th>
-                <th className="px-4 py-2">Contact Number</th>
-                <th className="px-4 py-2">Email</th>
-                <th className="px-4 py-2">Date Added</th>
-              </tr>
-            </thead>
-            <tbody className="max-h-[80vh]">
-              {monitors.map((monitor, index) => {
-                const fullName = `${monitor?.firstName?.toLowerCase()} ${monitor?.lastName?.toLowerCase()}`;
-                if (fullName.includes(searchTerm.toLocaleLowerCase())) {
-                  return (
-                    <TableRow
-                      key={index}
-                      serialNumber={index + 1}
-                      firstName={monitor.firstName}
-                      lastName={monitor.lastName}
-                      contactNumber={monitor.phoneNumber}
-                      email={monitor.emailAddress}
-                      dateAdded={monitor.dateCreated}
-                      onEdit={() => handleEdit(monitor.id)}
-                      onDelete={() => handleDelete(monitor.id)}
-                      isGrey={index % 2 === 0}
-                    />
-                  );
-                }
-              })}
-            </tbody>
-          </table>
-        </div>
+        {monitors.length === 0 ? (
+          <div className="w-full flex items-center justify-end">
+            <Link href="/dashboard/monitors/add">
+              <Image
+                src="/icons/add_fab.svg"
+                width={80}
+                height={80}
+                alt="Add Icon"
+              />
+            </Link>
+          </div>
+        ) : (
+          <>
+            <div className="w-full overflow-x-auto">
+              <table className="w-full table-auto">
+                <thead>
+                  <tr className="font-semibold">
+                    <th className="px-4 py-2">S/N</th>
+                    <th className="px-4 py-2">Full Name</th>
+                    <th className="px-4 py-2">Contact Number</th>
+                    <th className="px-4 py-2">Email</th>
+                    <th className="px-4 py-2">Date Added</th>
+                  </tr>
+                </thead>
+                <tbody className="max-h-[80vh]">
+                  {monitors.map((monitor, index) => {
+                    const fullName = `${monitor?.firstName?.toLowerCase()} ${monitor?.lastName?.toLowerCase()}`;
+                    if (fullName.includes(searchTerm.toLocaleLowerCase())) {
+                      return (
+                        <TableRow
+                          key={index}
+                          serialNumber={index + 1}
+                          firstName={monitor.firstName}
+                          lastName={monitor.lastName}
+                          contactNumber={monitor.phoneNumber}
+                          email={monitor.emailAddress}
+                          dateAdded={monitor.dateCreated}
+                          onEdit={() => handleEdit(monitor.id)}
+                          onDelete={() => handleDelete(monitor.id)}
+                          isGrey={index % 2 === 0}
+                        />
+                      );
+                    }
+                  })}
+                </tbody>
+              </table>
+            </div>
+            <div className="w-full flex items-center justify-end">
+              <Link href="/dashboard/monitors/add">
+                <Image
+                  src="/icons/add_fab.svg"
+                  width={80}
+                  height={80}
+                  alt="Add Icon"
+                />
+              </Link>
+            </div>
+          </>
+        )}
       </div>
     </DashboardLayout>
   );
