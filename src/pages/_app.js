@@ -1,10 +1,9 @@
 import "@/styles/globals.css";
 import NextNProgress from "nextjs-progressbar";
-import UserProvider from "@/contexts/UserContext";
 
 export default function App({ Component, pageProps }) {
   return (
-    <UserProvider>
+    <>
       <NextNProgress
         color="#37139D"
         stopDelayMs={200}
@@ -15,6 +14,6 @@ export default function App({ Component, pageProps }) {
         }}
       />
       <Component {...pageProps} />
-    </UserProvider>
+    </>
   );
 }
