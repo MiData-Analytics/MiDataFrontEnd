@@ -7,6 +7,7 @@ import { urls } from "@/utils/urls";
 import { useRouter } from "next/router";
 import Toast from "awesome-toast-component";
 import { TailSpin } from "react-loader-spinner";
+import country from "locations-ng";
 
 export default function Monitor() {
   const [formData, setFormData] = useState({
@@ -21,6 +22,13 @@ export default function Monitor() {
   const [btnDisabled, setBtnDisabled] = useState(false);
   const { token } = useCookie();
   const { push, query } = useRouter();
+
+  const states = country.state.all();
+  const [lgaOption, setLGAOption] = useState([]);
+
+  useEffect(() => {
+    setLGAOption(country.lga.lgas(formData.state));
+  }, [formData.state]);
 
   useEffect(() => {
     async function getData() {
@@ -38,6 +46,7 @@ export default function Monitor() {
             phoneNumber,
             contactDetails,
             lga,
+            state,
             emailAddress,
           } = response.data;
 
@@ -48,6 +57,7 @@ export default function Monitor() {
             phoneNumber: phoneNumber,
             contactDetails: contactDetails,
             lga: lga,
+            state: state,
             emailAddress: emailAddress,
           }));
         }
@@ -171,16 +181,40 @@ export default function Monitor() {
               />
             </div>
             <div className="flex flex-col items-center w-full">
-              <input
-                type="text"
+              <select
+                className="w-full border rounded-md p-2 placeholder:text-black placeholder:font-thin"
+                name="state"
+                id="state"
+                onChange={handleChange}
+                value={formData.state}
+              >
+                State
+                {states.map((state, index) => {
+                  return (
+                    <option value={state.name} key={index}>
+                      {state.name}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+            <div className="flex flex-col items-center w-full">
+              <select
+                className="w-full border rounded-md p-2 placeholder:text-black placeholder:font-thin"
                 name="lga"
                 id="lga"
-                className="w-full border rounded-md p-2 placeholder:text-black placeholder:font-thin"
-                placeholder="Local Government Area"
                 onChange={handleChange}
                 value={formData.lga}
-                required
-              />
+              >
+                Local Government Area
+                {lgaOption.map((lga, index) => {
+                  return (
+                    <option value={lga} key={index}>
+                      {lga}
+                    </option>
+                  );
+                })}
+              </select>
             </div>
             <div className="flex flex-col items-center w-full">
               <input

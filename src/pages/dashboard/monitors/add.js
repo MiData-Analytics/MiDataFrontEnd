@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DashboardLayout } from "@/layouts/Dashboard";
 import Head from "next/head";
 import axios from "axios";
@@ -7,12 +7,14 @@ import { urls } from "@/utils/urls";
 import { useRouter } from "next/router";
 import Toast from "awesome-toast-component";
 import { TailSpin } from "react-loader-spinner";
+import country from "locations-ng";
 
 export default function AddMonitor() {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
     lga: "",
+    state: "Abia",
     emailAddress: "",
     phoneNumber: "",
     contactDetails: "",
@@ -20,8 +22,15 @@ export default function AddMonitor() {
   const [loading, setLoading] = useState(false);
   const { token } = useCookie();
   const { push } = useRouter();
+  const states = country.state.all();
+  const [lgaOption, setLGAOption] = useState([]);
+
+  useEffect(() => {
+    setLGAOption(country.lga.lgas(formData.state));
+  }, [formData.state]);
 
   async function handleSubmit(e) {
+    console.log(formData);
     e.preventDefault();
     new Toast("Creating New Monitor...");
 
@@ -45,7 +54,9 @@ export default function AddMonitor() {
     } catch (error) {
       if (error.response) {
         if (error.response.status === 401) {
-          new Toast("Unauthorized Action...");
+          new Toast(
+            "Unauthorized Action... You can't create a monitor account with admin credentials"
+          );
         }
 
         if (error.response.status === 409) {
@@ -63,7 +74,7 @@ export default function AddMonitor() {
         );
       }
 
-      console.error(error)
+      console.error(error);
 
       setLoading(false);
     }
@@ -130,16 +141,40 @@ export default function AddMonitor() {
               />
             </div>
             <div className="flex flex-col items-center w-full">
-              <input
-                type="text"
+              <select
+                className="w-full border rounded-md p-2 placeholder:text-black placeholder:font-thin"
+                name="state"
+                id="state"
+                onChange={handleChange}
+                value={formData.state}
+              >
+                State
+                {states.map((state, index) => {
+                  return (
+                    <option value={state.name} key={index}>
+                      {state.name}
+                    </option>
+                  );
+                })}
+              </select>
+            </div>
+            <div className="flex flex-col items-center w-full">
+              <select
+                className="w-full border rounded-md p-2 placeholder:text-black placeholder:font-thin"
                 name="lga"
                 id="lga"
-                className="w-full border rounded-md p-2 placeholder:text-black placeholder:font-thin"
-                placeholder="Local Government Area"
                 onChange={handleChange}
                 value={formData.lga}
-                required
-              />
+              >
+                Local Government Area
+                {lgaOption.map((lga, index) => {
+                  return (
+                    <option value={lga} key={index}>
+                      {lga}
+                    </option>
+                  );
+                })}
+              </select>
             </div>
             <div className="flex flex-col items-center w-full">
               <input

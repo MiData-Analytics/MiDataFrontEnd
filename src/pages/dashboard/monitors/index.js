@@ -80,6 +80,7 @@ export default function Monitors() {
               {monitors.length}
             </span>{" "}
             {monitors.length > 1 && "Monitors"}
+            {monitors.length === 1 && "Monitor"}
             {monitors.length === 0 && "Monitors"}
           </p>
 
@@ -112,6 +113,8 @@ export default function Monitors() {
                     <th className="px-4 py-2">Full Name</th>
                     <th className="px-4 py-2">Contact Number</th>
                     <th className="px-4 py-2">Email</th>
+                    <th className="px-4 py-2">State</th>
+                    <th className="px-4 py-2">LGA</th>
                     <th className="px-4 py-2">Date Added</th>
                   </tr>
                 </thead>
@@ -127,6 +130,8 @@ export default function Monitors() {
                           lastName={monitor.lastName}
                           contactNumber={monitor.phoneNumber}
                           email={monitor.emailAddress}
+                          state={monitor.state}
+                          lga={monitor.lga}
                           dateAdded={monitor.dateCreated}
                           onEdit={() => handleEdit(monitor.id)}
                           onDelete={() => handleDelete(monitor.id)}

@@ -7,6 +7,8 @@ const TableRow = ({
   lastName,
   contactNumber,
   email,
+  state,
+  lga,
   dateAdded,
   onEdit,
   onDelete,
@@ -22,6 +24,8 @@ const TableRow = ({
       </td>
       <td className="px-4 py-2">{contactNumber}</td>
       <td className="px-4 py-2">{email}</td>
+      <td className="px-4 py-2">{state}</td>
+      <td className="px-4 py-2">{lga}</td>
       <td className="px-4 py-2">{dateAdded}</td>
       <td className="px-4 py-2 space-x-2 ">
         <div className="flex items-center justify-center gap-3">
