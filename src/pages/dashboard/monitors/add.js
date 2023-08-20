@@ -146,6 +146,7 @@ export default function AddMonitor() {
                 name="state"
                 id="state"
                 onChange={handleChange}
+                value={formData.state}
               >
                 State
                 {states.map((state, index) => {
@@ -163,6 +164,7 @@ export default function AddMonitor() {
                 name="lga"
                 id="lga"
                 onChange={handleChange}
+                value={formData.lga}
               >
                 Local Government Area
                 {lgaOption.map((lga, index) => {
