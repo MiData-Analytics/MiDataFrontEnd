@@ -57,7 +57,7 @@ export default function Monitors() {
       <Head>
         <title>MiData | Monitors</title>
       </Head>
-      <div className="w-full">
+      <div className="sm:p-10 p-0">
         <h3 className="font-bold text-3xl text-[#4E4E4E]">My Monitors</h3>
         <div className="flex justify-between w-full gap-2 mt-3">
           <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
