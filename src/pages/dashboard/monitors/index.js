@@ -121,7 +121,7 @@ export default function Monitors() {
                 <tbody className="max-h-[80vh]">
                   {monitors.map((monitor, index) => {
                     const fullName = `${monitor?.firstName?.toLowerCase()} ${monitor?.lastName?.toLowerCase()}`;
-                    if (fullName.includes(searchTerm.toLocaleLowerCase())) {
+                    if (fullName.includes(searchTerm.toLowerCase())) {
                       return (
                         <TableRow
                           key={index}
