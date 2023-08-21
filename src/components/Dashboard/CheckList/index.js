@@ -34,7 +34,7 @@ export const CheckList = ({
           </Link>
         </div>
       </div>
-      <div className="flex flex-col sm:gap-3 gap-1">
+      <div className="flex flex-col sm:gap-3 gap-1 sm:text-right text-left">
         <span className="text-xl font-semibold text-[#666666]">
           {percentageComplete}% Complete
         </span>
