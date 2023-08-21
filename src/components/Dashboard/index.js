@@ -294,7 +294,7 @@ export function Header() {
   );
 }
 
-export function SearchBar({ searchTerm, setSearchTerm }) {
+export function SearchBar({ searchTerm, setSearchTerm,placeholder }) {
   return (
     <div className="border px-2 py-3 rounded-md w-full flex items-center">
       <Image
@@ -307,7 +307,7 @@ export function SearchBar({ searchTerm, setSearchTerm }) {
         type="text"
         name="searchTerm"
         id="searchTerm"
-        placeholder="Search by name"
+        placeholder={placeholder}
         className="h-full px-2 py-3 w-full outline-none"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
