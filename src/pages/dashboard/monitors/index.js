@@ -60,7 +60,7 @@ export default function Monitors() {
       <div className="sm:p-10 p-0">
         <h3 className="font-bold text-3xl text-[#4E4E4E]">My Monitors</h3>
         <div className="flex justify-between w-full gap-2 mt-3">
-          <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} placeholder={"Search by name"} />
           <Filter />
         </div>
         <div className="flex justify-between my-5">
