@@ -25,6 +25,7 @@ import { useCookies } from "react-cookie";
 import { useGetProfile } from "@/hooks/useGetProfile";
 import { useGetMonitors } from "@/hooks/useGetMonitors";
 import { AnimatePresence, motion } from "framer-motion";
+import { TailSpin } from "react-loader-spinner";
 
 const firstLinks = [
   {
@@ -62,9 +63,9 @@ export function Sidebar() {
 
   const { push } = useRouter();
 
-  function closeNav (){
-    if(showMobile){
-      setMobile(false)
+  function closeNav() {
+    if (showMobile) {
+      setMobile(false);
     }
   }
 
@@ -111,7 +112,10 @@ export function Sidebar() {
               variants={variants}
             >
               <div className="flex justify-end w-full">
-                <AiOutlineCloseCircle size={35} onClick={() => setMobile(false)} />
+                <AiOutlineCloseCircle
+                  size={35}
+                  onClick={() => setMobile(false)}
+                />
               </div>
               <Image
                 src="/logo/midata.png"
@@ -217,7 +221,7 @@ export function Sidebar() {
 
 export function Header() {
   const [searchTerm, setSearchTerm] = useState("");
-  const { userData } = useGetProfile();
+  const { userData, isLoading } = useGetProfile();
 
   function Options({ icon, link }) {
     const { pathname } = useRouter();
@@ -256,8 +260,10 @@ export function Header() {
     <>
       <nav className="w-full lg:hidden flex justify-between border-b items-center py-3 gap-1 px-1">
         <Options />
-        {userData && (
-          <p className="text-xs">{`${userData?.firstName} ${userData?.lastName}`}</p>
+        {isLoading ? (
+          <TailSpin width={25} height={25} color="black" />
+        ) : (
+          <p className="text-xs">{`${userData.firstName} ${userData.lastName}`}</p>
         )}
       </nav>
       <nav className="w-full h-20 bg-white shadow-md items-center p-3 justify-between lg:flex hidden">
@@ -274,9 +280,11 @@ export function Header() {
           </div>
         </div>
         <div className="w-fit">
-          {userData && (
+          {isLoading ? (
+            <TailSpin width={25} height={25} color="black" />
+          ) : (
             <p className="inline-flex items-center gap-2 hover:cursor-pointer">
-              {`${userData?.firstName} ${userData?.lastName}`}
+              {`${userData.firstName} ${userData.lastName}`}
               <AiFillCaretDown size={15} />
             </p>
           )}
