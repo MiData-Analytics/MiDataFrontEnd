@@ -170,7 +170,7 @@ export function Sidebar() {
           <AiOutlineMenu size={25} onClick={() => setMobile(true)} />
         </div>
       </nav>
-      <nav className="w-72 border bg-white h-[100vh] lg:flex flex-col items-center py-3 justify-start gap-10 hidden">
+      <nav className="w-72 border bg-white h-[100vh] lg:flex flex-col items-center py-3 justify-start gap-10 hidden sticky top-0">
         <Link href="/dashboard">
           <Image
             src="/logo/midata.png"
