@@ -37,13 +37,16 @@ export const Header = ({ title, description, coverImgURL, handleChange }) => {
           </div>
         </div>
         <div className="flex flex-row justify-start gap-x-5 w-full">
-          <div className="flex items-center gap-x-2 text-[#AAAAAA] hover:cusor-pointer">
+          <label
+            className="flex items-center gap-x-2 text-[#AAAAAA] hover:cursor-pointer"
+            htmlFor="deadline"
+          >
             <Image src="/icons/clock.svg" alt="Clock" width={18} height={18} />
             Set Deadline
-          </div>
-          <div className="flex items-center gap-x-2 text-[#AAAAAA] hover:cusor-pointer">
+          </label>
+          <div className="flex items-center gap-x-2 text-[#AAAAAA] hover:cursor-pointer">
             <AiFillCaretDown size={18} color="black" />
-            Set Deadline
+            Select Form Type
           </div>
         </div>
       </div>
