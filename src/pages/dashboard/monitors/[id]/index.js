@@ -257,7 +257,7 @@ export default function Monitor() {
                 {loading ? (
                   <TailSpin color="#fff" width={15} height={15} />
                 ) : (
-                  "Add Monitor"
+                  "Update Monitor"
                 )}
               </button>
             </div>

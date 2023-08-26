@@ -8,7 +8,7 @@ import { HiUsers } from "react-icons/hi";
 import { BiWallet } from "react-icons/bi";
 import { FiLogOut } from "react-icons/fi";
 import { useRouter } from "next/router";
-import { AiOutlineMenu } from "react-icons/ai";
+import { AiOutlineMenu, AiOutlineCloseCircle } from "react-icons/ai";
 import { AiFillCaretDown } from "react-icons/ai";
 import { HiMagnifyingGlass } from "react-icons/hi2";
 import {
@@ -24,6 +24,8 @@ import Box from "@mui/material/Box";
 import { useCookies } from "react-cookie";
 import { useGetProfile } from "@/hooks/useGetProfile";
 import { useGetMonitors } from "@/hooks/useGetMonitors";
+import { AnimatePresence, motion } from "framer-motion";
+import { TailSpin } from "react-loader-spinner";
 
 const firstLinks = [
   {
@@ -53,14 +55,25 @@ const secondLinks = [
 
 export function Sidebar() {
   const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const [showMobile, setMobile] = useState(false);
+  const variants = {
+    hidden: { opacity: 0, y: -20 },
+    visible: { opacity: 1, y: 0 },
+  };
 
   const { push } = useRouter();
 
-  function NavLink({ url, title, icon }) {
+  function closeNav() {
+    if (showMobile) {
+      setMobile(false);
+    }
+  }
+
+  function NavLink({ url, title, icon, onClick }) {
     const { pathname } = useRouter();
 
     return (
-      <Link href={url}>
+      <Link href={url} onClick={onClick}>
         <div
           className={`flex justify-start gap-4 items-center border w-56 mx-auto p-3  py-5 rounded-xl ${
             pathname === url ? "bg-[#6C3FEE] text-white" : ""
@@ -73,10 +86,6 @@ export function Sidebar() {
     );
   }
 
-  function MobileNav() {}
-
-  function SearchModal() {}
-
   function logOut() {
     removeCookie("token", {
       path: "/",
@@ -88,7 +97,66 @@ export function Sidebar() {
 
   return (
     <>
-      <nav className="lg:hidden flex w-full border justify-between bg-white shadow-md">
+      <nav className="lg:hidden flex w-full border justify-between bg-white shadow-md relative">
+        <AnimatePresence
+          initial={false}
+          node="wait"
+          onExitComplete={() => null}
+        >
+          {showMobile && (
+            <motion.div
+              className="fixed top-0 w-full h-[100vh] bg-white z-40 flex flex-col items-center justify-start p-3 gap-2"
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={variants}
+            >
+              <div className="flex justify-end w-full">
+                <AiOutlineCloseCircle
+                  size={35}
+                  onClick={() => setMobile(false)}
+                />
+              </div>
+              <Image
+                src="/logo/midata.png"
+                alt="MiData Logo"
+                height={57}
+                width={196}
+              />
+              <div className="flex flex-col gap-3">
+                {firstLinks.map((link, index) => {
+                  return (
+                    <NavLink
+                      key={index}
+                      url={link.url}
+                      title={link.title}
+                      icon={link.icon}
+                      onClick={closeNav}
+                    />
+                  );
+                })}
+                {secondLinks.map((link, index) => {
+                  return (
+                    <NavLink
+                      key={index}
+                      url={link.url}
+                      title={link.title}
+                      icon={link.icon}
+                      onClick={closeNav}
+                    />
+                  );
+                })}
+                <div
+                  className={`flex justify-start gap-4 items-center border w-56 mx-auto p-3  py-5 rounded-xl hover:bg-[#6C3FEE] hover:text-white hover:shadow-md hover:duration-300`}
+                  onClick={logOut}
+                >
+                  <FiLogOut size={25} />
+                  Logout
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
         <Link href="/dashboard">
           <Image
             src="/logo/midata.png"
@@ -99,10 +167,10 @@ export function Sidebar() {
         </Link>
         <div className="flex items-center gap-3 pr-2">
           <HiMagnifyingGlass size={25} />
-          <AiOutlineMenu size={25} />
+          <AiOutlineMenu size={25} onClick={() => setMobile(true)} />
         </div>
       </nav>
-      <nav className="w-72 border bg-white h-[100vh] lg:flex flex-col items-center py-3 justify-start gap-10 hidden">
+      <nav className="w-72 border bg-white h-[100vh] lg:flex flex-col items-center py-3 justify-start gap-10 hidden sticky top-0">
         <Link href="/dashboard">
           <Image
             src="/logo/midata.png"
@@ -153,7 +221,7 @@ export function Sidebar() {
 
 export function Header() {
   const [searchTerm, setSearchTerm] = useState("");
-  const { userData } = useGetProfile();
+  const { userData, isLoading } = useGetProfile();
 
   function Options({ icon, link }) {
     const { pathname } = useRouter();
@@ -192,8 +260,10 @@ export function Header() {
     <>
       <nav className="w-full lg:hidden flex justify-between border-b items-center py-3 gap-1 px-1">
         <Options />
-        {userData && (
-          <p className="text-xs">{`${userData?.firstName} ${userData?.lastName}`}</p>
+        {isLoading ? (
+          <TailSpin width={25} height={25} color="black" />
+        ) : (
+          <p className="text-xs">{`${userData.firstName} ${userData.lastName}`}</p>
         )}
       </nav>
       <nav className="w-full h-20 bg-white shadow-md items-center p-3 justify-between lg:flex hidden">
@@ -210,9 +280,11 @@ export function Header() {
           </div>
         </div>
         <div className="w-fit">
-          {userData && (
+          {isLoading ? (
+            <TailSpin width={25} height={25} color="black" />
+          ) : (
             <p className="inline-flex items-center gap-2 hover:cursor-pointer">
-              {`${userData?.firstName} ${userData?.lastName}`}
+              {`${userData.firstName} ${userData.lastName}`}
               <AiFillCaretDown size={15} />
             </p>
           )}
@@ -222,7 +294,7 @@ export function Header() {
   );
 }
 
-export function SearchBar({ searchTerm, setSearchTerm }) {
+export function SearchBar({ searchTerm, setSearchTerm,placeholder }) {
   return (
     <div className="border px-2 py-3 rounded-md w-full flex items-center">
       <Image
@@ -235,7 +307,7 @@ export function SearchBar({ searchTerm, setSearchTerm }) {
         type="text"
         name="searchTerm"
         id="searchTerm"
-        placeholder="Search by name"
+        placeholder={placeholder}
         className="h-full px-2 py-3 w-full outline-none"
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
@@ -442,7 +514,7 @@ export function WorkBoard() {
           Early Warning Signs
         </h3>
         <div
-          className="inline-flex items-center bg-[#D9D9D9] sm:w-60 w-32 justify-between rounded-md px-2 py-1 hover:cursor-pointer sm:text-base text-[0.5rem] relative"
+          className="inline-flex items-center bg-[#D9D9D9] sm:w-60 w-32 justify-between rounded-md px-2 py-1 hover:cursor-pointer sm:text-base text-[0.5rem] relative z-0"
           onClick={() => setShowOptions(!showOptions)}
         >
           {option}
