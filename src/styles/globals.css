@@ -7,3 +7,43 @@
     font-family: 'Rubik', sans-serif;
   }
 }
+
+/* For WebKit browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 5px; /* width of the scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* color of the track */
+}
+
+::-webkit-scrollbar-thumb {
+  background: #6C3FEE; /* color of the thumb */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; /* color of the thumb on hover */
+}
+
+/* For Firefox */
+/* Firefox does not currently support styling the scrollbar, but you can use the 'scrollbar-color' property */
+/* The first color is for the thumb, and the second color is for the track */
+/* The 'auto' keyword indicates that the default system colors should be used if the browser does not support scrollbar styling */
+body {
+  scrollbar-color: #6C3FEE #f1f1f1;
+}
+
+/* For Microsoft Edge and IE */
+/* Microsoft Edge (EdgeHTML) and Internet Explorer (Trident) support a different way of styling scrollbars */
+/* This example is for Edge and IE 11 */
+/* You can adjust the colors and other properties as needed */
+body {
+  scrollbar-base-color: #f1f1f1;
+  scrollbar-face-color: #6C3FEE;
+  scrollbar-shadow-color: #000;
+  scrollbar-arrow-color: #000;
+  scrollbar-3dlight-color: #f1f1f1;
+  scrollbar-highlight-color: #fff;
+  scrollbar-track-color: #f1f1f1;
+  scrollbar-darkshadow-color: #6C3FEE;
+}
