@@ -19,6 +19,7 @@
 
 ::-webkit-scrollbar-thumb {
   background: #6C3FEE; /* color of the thumb */
+  border-radius: 15px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
