@@ -6,10 +6,18 @@ import { CheckList } from "@/components/Dashboard/CheckList";
 import Link from "next/link";
 import { BsPlusLg } from "react-icons/bs";
 import { AiFillCaretDown } from "react-icons/ai";
+import axios from "axios";
+import { useRouter } from "next/router";
+import { useCookie } from "@/hooks/useCookie";
+import { urls } from "@/utils/urls";
+import Toast from "awesome-toast-component";
+import { useGetChecklists } from "@/hooks/useGetChecklists";
 
 export default function Checklists() {
   const [searchTerm, setSearchTerm] = useState("");
-
+  const { push } = useRouter();
+  const { token } = useCookie();
+  const { checklists, isLoading, isError } = useGetChecklists();
   const checkList = [
     {
       title: "Early Warning Signs",
@@ -44,8 +52,30 @@ export default function Checklists() {
       daysRemaining: 3,
       status: "closed",
     },
-
   ];
+
+  async function initializeChecklist() {
+    new Toast("Initializing Checklist...");
+    try {
+      const res = await axios.post(
+        urls.initializeChecklist,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (res.status === 201) {
+        const { id } = res.data;
+        new Toast("Initialized Checklist...");
+        push(`/dashboard/checklists/${id}`);
+      }
+    } catch (error) {
+      new Toast("Failed to initialize checklist");
+    }
+  }
 
   return (
     <DashboardLayout>
@@ -64,23 +94,24 @@ export default function Checklists() {
         </div>
         <div className="flex justify-between my-5">
           <div></div>
-          <Link href="/dashboard/checklists/create">
-            <div>
-              <button className="bg-[#6C3FEE] text-white flex items-center justify-center py-4 px-7 rounded-md gap-x-3">
-                Create Checklist <BsPlusLg color="#fff" size={20} />
-              </button>
-            </div>
-          </Link>
+          <div>
+            <button
+              className="bg-[#6C3FEE] text-white flex items-center justify-center py-4 px-7 rounded-md gap-x-3"
+              onClick={initializeChecklist}
+            >
+              Create Checklist <BsPlusLg color="#fff" size={20} />
+            </button>
+          </div>
         </div>
         <div className="flex items-center justify-between w-full my-5">
           <p>
             We've found{" "}
             <span className="font-semibold text-primary">
-              {checkList.length}
+              {checklists.length}
             </span>{" "}
-            {checkList.length > 1 && "Checklists"}
-            {checkList.length === 1 && "Monitor"}
-            {checkList.length === 0 && "Checklists"}
+            {checklists.length > 1 && "Checklists"}
+            {checklists.length === 1 && "Checklist"}
+            {checklists.length === 0 && "Checklists"}
           </p>
 
           <p className="flex items-center font-semibold gap-2 hover:cursor-pointer">
@@ -91,31 +122,39 @@ export default function Checklists() {
             </span>
           </p>
         </div>
-        <div className="flex flex-col gap-3 h-[55vh] overflow-y-auto">
-          {checkList.map((checklist, index) => {
-            const {
-              title,
-              monitors,
-              author,
-              percentageComplete,
-              daysRemaining,
-              status,
-            } = checklist;
+        <div className="flex flex-col gap-3 items-center w-full text-2xl">
+          {checklists.length === 0 && (
+            <div>You have no checklist at this time</div>
+          )}
+        </div>
+        <div className="flex flex-col gap-3">
+          {checklists.length !== 0 &&
+            checklists.map((checklist, index) => {
+              const {
+                id,
+                title,
+                monitors,
+                author,
+                percentageComplete,
+                daysRemaining,
+                status,
+              } = checklist;
 
-            if (title.toLowerCase().includes(searchTerm.toLowerCase())) {
-              return (
-                <CheckList
-                  title={title}
-                  monitors={monitors}
-                  author={author}
-                  percentageComplete={percentageComplete}
-                  daysRemaining={daysRemaining}
-                  status={status}
-                  key={index}
-                />
-              );
-            }
-          })}
+              if (title?.toLowerCase().includes(searchTerm.toLowerCase())) {
+                return (
+                  <CheckList
+                    id={id}
+                    title={title}
+                    monitors={monitors}
+                    author={author}
+                    percentageComplete={percentageComplete}
+                    daysRemaining={daysRemaining}
+                    status={status}
+                    key={index}
+                  />
+                );
+              }
+            })}
         </div>
       </div>
     </DashboardLayout>
