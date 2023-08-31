@@ -71,11 +71,11 @@ export function useGetQuestions(id){
 }
 
 export function useGetChecklist(id) {
+  const { token } = useCookie();
+
   const [checklist, setChecklist] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setError] = useState(false);
-  const { token } = useCookie();
-  const [lastUpdatedAt, setLastUpdatedAt] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -86,27 +86,19 @@ export function useGetChecklist(id) {
           },
         });
 
-        if (response.data.updatedAt !== lastUpdatedAt) {
+        if (response.data) {
           setChecklist(response.data);
           setIsLoading(false);
-          setLastUpdatedAt(response.data.updatedAt);
 
-          // Cache the checklist and lastUpdatedAt in local storage
+          // Cache the checklist and updatedAt in local storage
           localStorage.setItem(
-            `checklist-${response.data.id}`,
+            `checklist-${id}`,
             JSON.stringify(response.data)
           );
           localStorage.setItem(
-            `checklist-${response.data.id}-lastUpdatedAt`,
+            `checklist-${id}-updatedAt`,
             response.data.updatedAt
           );
-        } else {
-          // If updatedAt hasn't changed, use cached data
-          const cachedChecklist = localStorage.getItem(
-            `checklist-${id}`
-          );
-          setChecklist(JSON.parse(cachedChecklist));
-          setIsLoading(false);
         }
       } catch (error) {
         console.error("Error fetching checklist data", error);
@@ -115,19 +107,18 @@ export function useGetChecklist(id) {
       }
     };
 
-    const cachedLastUpdatedAt = localStorage.getItem(
-      `checklist-${id}-lastUpdatedAt`
-    );
+    const cachedChecklist = localStorage.getItem(`checklist-${id}`);
+    const cachedUpdatedAt = localStorage.getItem(`checklist-${id}-updatedAt`);
 
-    if (cachedLastUpdatedAt) {
-      setLastUpdatedAt(cachedLastUpdatedAt);
-    }
+    if (cachedChecklist && cachedUpdatedAt) {
+      setChecklist(JSON.parse(cachedChecklist));
+      setIsLoading(false);
 
-    if (!lastUpdatedAt) {
+      fetchData(); // Fetch in the background to update the cache
+    } else {
       fetchData();
     }
-  }, []);
-
+  }, [id, token]);
 
   return {
     checklist,
