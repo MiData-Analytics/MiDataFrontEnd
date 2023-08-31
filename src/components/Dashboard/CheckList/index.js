@@ -1,13 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useRef } from "react";
 import { BsFillPlusCircleFill } from "react-icons/bs";
 import Toast from "awesome-toast-component";
 import { RxBox } from "react-icons/rx";
 import { BiUpload } from "react-icons/bi";
 import { AiFillCalendar, AiFillClockCircle } from "react-icons/ai";
+import _debounce from "lodash/debounce";
+import axios from "axios";
+import { urls } from "@/utils/urls";
+import { useCookie } from "@/hooks/useCookie";
 
 export const CheckList = ({
+  id,
   title,
   monitors,
   author,
@@ -16,7 +21,10 @@ export const CheckList = ({
   status,
 }) => {
   return (
-    <div className="flex w-full mx-auto border rounded-md shadow-md justify-between p-3 hover:cursor-default sm:flex-row flex-col">
+    <Link
+      href={`/dashboard/checklists/${id}`}
+      className="flex w-full mx-auto border rounded-md shadow-md justify-between p-3 hover:cursor-pointer sm:flex-row flex-col hover:shadow-lg duration-500"
+    >
       <div className="flex flex-col gap-3 items-start justify-between">
         <div className="flex justify-between gap-3">
           <h3 className="text-2xl">{title}</h3>
@@ -53,12 +61,46 @@ export const CheckList = ({
           {daysRemaining} days remaining
         </span>
       </div>
-    </div>
+    </Link>
   );
 };
 
-export const Choice = ({ removeRadioChoice }) => {
-  const [multipleChoiceValue, setMultipleChoiceValue] = useState("Option");
+export const Choice = ({
+  removeRadioChoice,
+  option,
+  id,
+  formData,
+  setFormData,
+  editQuestion,
+}) => {
+  const [multipleChoiceValue, setMultipleChoiceValue] = useState("");
+
+  useEffect(() => {
+    setMultipleChoiceValue(option);
+  }, [option]);
+
+  const handleChange = (e) => {
+    const newSelectedValue = e.target.value;
+    setMultipleChoiceValue(newSelectedValue);
+
+    setFormData((prevData) => {
+      const newOptions = [...prevData.options];
+      newOptions[id] = newSelectedValue;
+
+      return {
+        ...prevData,
+        options: newOptions,
+      };
+    });
+
+    const newOptions = [...formData.options];
+    newOptions[id] = newSelectedValue;
+
+    editQuestion({
+      ...formData,
+      options: newOptions,
+    });
+  };
 
   return (
     <div className="flex items-center cursor-pointer gap-x-2 justify-between w-full">
@@ -70,7 +112,7 @@ export const Choice = ({ removeRadioChoice }) => {
             type="text"
             plsceholder="Answer"
             value={multipleChoiceValue}
-            onChange={(e) => setMultipleChoiceValue(e.target.value)}
+            onChange={handleChange}
             className="outline-none w-full"
             unselectable
           />
@@ -95,8 +137,42 @@ export const Choice = ({ removeRadioChoice }) => {
   );
 };
 
-export const Option = ({ removeCheckbox }) => {
+export const Option = ({
+  removeCheckbox,
+  option,
+  id,
+  formData,
+  setFormData,
+  editQuestion,
+}) => {
   const [selectedValue, setSelectedValue] = useState("");
+
+  useEffect(() => {
+    setSelectedValue(option);
+  }, [option]);
+
+  const handleChange = (e) => {
+    const newSelectedValue = e.target.value;
+    setSelectedValue(newSelectedValue);
+
+    setFormData((prevData) => {
+      const newOptions = [...prevData.options];
+      newOptions[id] = newSelectedValue;
+
+      return {
+        ...prevData,
+        options: newOptions,
+      };
+    });
+
+    const newOptions = [...formData.options];
+    newOptions[id] = newSelectedValue;
+
+    editQuestion({
+      ...formData,
+      options: newOptions,
+    });
+  };
 
   return (
     <div className="flex items-center cursor-pointer gap-x-2 justify-between w-full">
@@ -108,7 +184,7 @@ export const Option = ({ removeCheckbox }) => {
             type="text"
             plsceholder="Answer"
             value={selectedValue}
-            onChange={(e) => setSelectedValue(e.target.value)}
+            onChange={handleChange}
             className="outline-none w-full"
             unselectable
           />
@@ -133,38 +209,113 @@ export const Option = ({ removeCheckbox }) => {
   );
 };
 
-export const Answer = ({ answerType }) => {
-  const [radioComponent, setRadioComponent] = useState([
-    <Choice />,
-    <Choice />,
-  ]);
+export const Answer = ({
+  answerType,
+  options,
+  addOptions,
+  removeOption,
+  formData,
+  setFormData,
+  editQuestion,
+}) => {
+  const [radioComponent, setRadioComponent] = useState([<Choice />]);
 
-  const [checkboxComponent, setcheckboxComponent] = useState([
-    <Option />,
-    <Option />,
-  ]);
+  const [checkboxComponent, setcheckboxComponent] = useState([<Option />]);
 
-  const [scale, setScale] = useState({
-    low: 0,
-    high: 0,
-  });
+  useEffect(() => {
+    if (answerType === "Check Boxes") {
+      const checks = options?.map((option, index) => (
+        <Option
+          option={option}
+          removeCheckbox={() => removeCheckbox(index)}
+          formData={formData}
+          setFormData={setFormData}
+          editQuestion={editQuestion}
+          id={index}
+        />
+      ));
 
-  const [scaleDropdown, setScaleDropdown] = useState({
-    low: false,
-    high: false,
-  });
+      if (checks) {
+        setcheckboxComponent([...checks]);
+      }
+    }
+
+    if (answerType === "Multiple Choice") {
+      const radio = options?.map((option, index) => (
+        <Choice
+          option={option}
+          removeRadioChoice={() => removeRadioChoice(index)}
+          formData={formData}
+          setFormData={setFormData}
+          editQuestion={editQuestion}
+          id={index}
+        />
+      ));
+
+      if (radio) {
+        setRadioComponent([...radio]);
+      }
+    }
+  }, [formData]);
 
   function newRadioChoice() {
     if (radioComponent.length > 4) {
       return new Toast("Too Many Options");
     }
-    setRadioComponent((components) => [...components, <Option />]);
+
+    setFormData((prevData) => {
+      const newOptions = [...prevData.options];
+      newOptions.push("");
+
+      return {
+        ...prevData,
+        options: newOptions,
+      };
+    });
+
+    const newOptions = [...formData.options];
+    newOptions.push("");
+
+    editQuestion({
+      ...formData,
+      options: newOptions,
+    });
+
+    setRadioComponent((components) => [
+      ...components,
+      <Choice
+        removeRadioChoice={() => removeRadioChoice(radioComponent.length - 1)}
+        option={""}
+        formData={formData}
+        setFormData={setFormData}
+        editQuestion={editQuestion}
+        id={radioComponent.length - 1}
+      />,
+    ]);
   }
 
   function removeRadioChoice(index) {
     if (radioComponent.length === 2) {
       return new Toast("There has to be at least two options");
     }
+
+     setFormData((prevData) => {
+       const newOptions = [...prevData.options];
+       newOptions.splice(index, 1);
+
+       return {
+         ...prevData,
+         options: newOptions,
+       };
+     });
+
+     const newOptions = [...formData.options];
+     newOptions.splice(index, 1);
+
+     editQuestion({
+       ...formData,
+       options: newOptions,
+     });
 
     setRadioComponent((components) => {
       const updatedList = [...components];
@@ -177,13 +328,60 @@ export const Answer = ({ answerType }) => {
     if (checkboxComponent.length > 4) {
       return new Toast("Too Many Options");
     }
-    setcheckboxComponent((components) => [...components, <Option />]);
+
+    setFormData((prevData) => {
+      const newOptions = [...prevData.options];
+      newOptions.push("");
+
+      return {
+        ...prevData,
+        options: newOptions,
+      };
+    });
+
+    const newOptions = [...formData.options];
+    newOptions.push("");
+
+    editQuestion({
+      ...formData,
+      options: newOptions,
+    });
+
+    setcheckboxComponent((component) => [
+      ...component,
+      <Option
+        removeCheckbox={() => removeCheckbox(checkboxComponent.length - 1)}
+        option={""}
+        formData={formData}
+        setFormData={setFormData}
+        editQuestion={editQuestion}
+        id={checkboxComponent.length - 1}
+      />,
+    ]);
   }
 
   function removeCheckbox(index) {
     if (checkboxComponent.length === 2) {
       return new Toast("There has to be at least two options");
     }
+
+    setFormData((prevData) => {
+      const newOptions = [...prevData.options];
+      newOptions.splice(index, 1);
+
+      return {
+        ...prevData,
+        options: newOptions,
+      };
+    });
+
+    const newOptions = [...formData.options];
+    newOptions.splice(index, 1);
+
+    editQuestion({
+      ...formData,
+      options: newOptions,
+    });
 
     setcheckboxComponent((components) => {
       const updatedList = [...components];
@@ -197,7 +395,7 @@ export const Answer = ({ answerType }) => {
       <div className="flex flex-col">
         <div className="sm:w-[80%] w-full flex justify-start flex-col gap-x-2 gap-y-1 pl-4 py-3">
           {radioComponent.map((component, index) => {
-            return <Choice key={index} removeRadioChoice={removeRadioChoice} />;
+            return <div key={index}>{component}</div>;
           })}
         </div>
         <div className="flex w-full justify-end p-3">
@@ -217,7 +415,8 @@ export const Answer = ({ answerType }) => {
         <input
           type="text"
           placeholder="Short Answer"
-          className="outline-none placeholder:text-xl text-xl w-full"
+          className="outline-none placeholder:text-xl text-xl w-full disabled:bg-transparent"
+          disabled
         />
       </div>
     );
@@ -229,8 +428,9 @@ export const Answer = ({ answerType }) => {
         <textarea
           type="text"
           placeholder="Paragraph"
-          className="outline-none placeholder:text-xl text-xl resize-none w-full"
+          className="outline-none placeholder:text-xl text-xl resize-none w-full disabled:bg-transparent"
           rows={4}
+          disabled
         ></textarea>
       </div>
     );
@@ -241,7 +441,7 @@ export const Answer = ({ answerType }) => {
       <div className="flex flex-col">
         <div className="sm:w-[80%] w-full flex justify-start flex-col gap-x-2 gap-y-1 pl-4 py-3">
           {checkboxComponent.map((component, index) => {
-            return <Option key={index} removeCheckbox={removeCheckbox} />;
+            return <div key={index}>{component}</div>;
           })}
         </div>
         <div className="flex w-full justify-end p-3">
@@ -316,10 +516,26 @@ export const Answer = ({ answerType }) => {
   }
 };
 
-export const CheckListEdit = ({ removeForm }) => {
-  const [type, setType] = useState("Short Answer");
-  const [showTypeDropdown, setShowTypeDropdown] = useState(false);
-  const [showDescription, setShowDescription] = useState(false);
+export const CheckListEdit = ({
+  id,
+  removeForm,
+  question,
+  answerType,
+  required,
+  setDescription,
+  questionOptions,
+  copyQuestion,
+}) => {
+  const [formData, setFormData] = useState({
+    question: "",
+    description: "",
+    type: "Short Answer",
+    showTypeDropdown: false,
+    showDescription: false,
+    required: true,
+    options: [],
+  });
+  const { token } = useCookie();
 
   const uniqueDescriptionId = useMemo(() => {
     return `checklist_${Math.floor(Math.random() * 100000)}`;
@@ -360,26 +576,87 @@ export const CheckListEdit = ({ removeForm }) => {
     { value: "Time" },
   ];
 
+  const debounceEditQuestion = useRef(
+    _debounce(async (updatedForm) => {
+      {
+        try {
+          const response = await axios.patch(
+            `${urls.updateQuestion}${id}`,
+            updatedForm,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+
+          if (response.status === 200) {
+            console.log("successfully updated question");
+          }
+        } catch (error) {
+          console.error(error);
+          new Toast("Failed to update question");
+        }
+      }
+    }, 500)
+  ).current;
+
+  useEffect(() => {
+    setFormData((prevData) => ({
+      ...prevData,
+      question: question,
+      description: setDescription,
+      type: answerType,
+      required: required,
+      showDescription: setDescription === "" ? false : true,
+      options: questionOptions,
+    }));
+  }, [id]);
+
   const handleSelect = (option) => {
-    setType(option);
-    setShowTypeDropdown(false);
+    setFormData((prevData) => ({
+      ...prevData,
+      type: option,
+      showTypeDropdown: false,
+    }));
+
+    debounceEditQuestion({ ...formData, type: option });
   };
 
   const handleCheckboxChange = (e) => {
-    setShowDescription(e.target.checked);
+    const { name, checked } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: checked,
+    }));
+
+    debounceEditQuestion({ ...formData, [name]: checked });
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+
+    debounceEditQuestion({ ...formData, [name]: value });
   };
 
   return (
     <div className="w-full rounded-lg shadow-md min-h-[45vh] h-fit relative flex justify-between flex-col">
       <div>
         <div className="h-[4vh] rounded-t-lg bg-[#6C3FEE]"></div>
-        <div className="flex justify-between">
+        <div className="flex justify-between flex-wrap">
           <div className="w-fit">
             <div className="border-b flex justify-start gap-x-2 pl-4 py-3">
               <input
                 type="text"
                 placeholder="Question"
-                className="outline-none placeholder:text-2xl text-2xl "
+                className="outline-none placeholder:text-2xl text-2xl"
+                name="question"
+                value={formData.question}
+                onChange={handleChange}
               />
               <Image
                 src="/icons/gallery.svg"
@@ -394,13 +671,18 @@ export const CheckListEdit = ({ removeForm }) => {
             <button
               className="bg-[#6C3FEE] text-white px-3 py-1 rounded-md"
               type="button"
-              onClick={() => setShowTypeDropdown(true)}
+              onClick={() =>
+                setFormData((prevData) => ({
+                  ...prevData,
+                  showTypeDropdown: !prevData.showTypeDropdown,
+                }))
+              }
             >
-              {type}
+              {formData.type}
             </button>
             <div
               className={`h-fit w-36 text-white absolute bg-[#6C3FEE] z-20 rounded-md mt-2 cursor-pointer ${
-                showTypeDropdown ? "block" : "hidden"
+                formData.showTypeDropdown ? "block" : "hidden"
               }`}
             >
               {options.map((option, index) => {
@@ -420,22 +702,31 @@ export const CheckListEdit = ({ removeForm }) => {
 
         <div
           className={`w-full border-b p-4 ${
-            showDescription ? "block" : "hidden"
+            formData.showDescription ? "block" : "hidden"
           }`}
         >
           <input
             type="text"
             className="outline-none placeholder:text-xl text-xl w-full"
+            name="description"
             placeholder="Description"
+            value={formData.description}
+            onChange={handleChange}
           />
         </div>
         <div className="w-full">
-          <Answer answerType={type} />
+          <Answer
+            answerType={formData.type}
+            options={formData.options}
+            formData={formData}
+            setFormData={setFormData}
+            editQuestion={debounceEditQuestion}
+          />
         </div>
       </div>
       <div className="border-t flex w-[90%] mx-auto px-3 justify-end items-center">
         <div className="flex border-r sm:justify-between justify-center h-full items-center gap-x-5 px-2 sm:flex-row flex-col">
-          <button className="flex gap-x-1" type="button">
+          <button className="flex gap-x-1" type="button" onClick={copyQuestion}>
             <Image src="/icons/copy.svg" height={20} width={20} alt="copy" />
             Copy
           </button>
@@ -451,6 +742,8 @@ export const CheckListEdit = ({ removeForm }) => {
               name="required"
               id={requiredId}
               className="w-4 h-4 accent-indigo-600"
+              value={formData.required}
+              onChange={handleCheckboxChange}
             />
             <label htmlFor={requiredId} className="cursor-pointer">
               Required
@@ -459,10 +752,10 @@ export const CheckListEdit = ({ removeForm }) => {
           <div className="flex items-center gap-x-1">
             <input
               type="checkbox"
-              name="showChecklistDescription"
+              name="showDescription"
               id={uniqueDescriptionId}
               className="w-4 h-4 accent-indigo-600"
-              checked={showDescription}
+              checked={formData.showDescription}
               onChange={handleCheckboxChange}
             />
             <label htmlFor={uniqueDescriptionId} className="cursor-pointer">
@@ -476,31 +769,40 @@ export const CheckListEdit = ({ removeForm }) => {
 };
 
 export const SideBar = ({ addForm }) => {
+  function inDevelopment() {
+    new Toast("Still in development");
+  }
+
   const images = [
     {
       path: "/icons/download.svg",
-      title:"Import List"
+      title: "Import List",
+      call: inDevelopment,
     },
     {
       path: "/icons/text.svg",
-      title:"Add Description"
+      title: "Add Description",
+      call: inDevelopment,
     },
     {
       path: "/icons/gallery.svg",
-      title:"Add Image"
+      title: "Add Image",
+      call: inDevelopment,
     },
     {
       path: "/icons/clapperboard.svg",
-      title:"Add Video"
+      title: "Add Video",
+      call: inDevelopment,
     },
     {
       path: "/icons/section.svg",
-      title:"Create Sub Section"
+      title: "Create Sub Section",
+      call: inDevelopment,
     },
   ];
 
   return (
-    <div className="w-[6vh] h-[32vh] rounded-md shadow-md border shadow-[#6C3FEE] flex flex-col justify-center items-center py-2 gap-y-1">
+    <div className=" rounded-md shadow-md border shadow-[#6C3FEE] flex flex-col justify-center items-center px-2 py-5 gap-y-1 h-fit">
       <BsFillPlusCircleFill
         size={30}
         color="#6C3FEE"
@@ -517,6 +819,7 @@ export const SideBar = ({ addForm }) => {
             height={30}
             alt={image.path}
             title={image.title}
+            onClick={image.call}
             className="object-contain hover:cursor-pointer"
           />
         );
