@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { AiFillCaretDown } from "react-icons/ai";
+import { useState } from "react";
 
 export const Header = ({
   title,
@@ -8,7 +9,12 @@ export const Header = ({
   handleChange,
   handleCoverImg,
   imgUploadRef,
+  checklistType,
+  options,
+  handleFormType,
 }) => {
+  const [selectDropdown, setSelectDropdown] = useState(false);
+
   return (
     <div className={`sm:w-[65%] w-full rounded-lg shadow-md h-[30vh] relative`}>
       <div className="h-[4vh] rounded-t-lg bg-[#6C3FEE] z-50 "></div>
@@ -51,11 +57,7 @@ export const Header = ({
               width={30}
               height={30}
             />
-            <h3
-              className={`text-right text-[#AAAAAA]`}
-            >
-              Add Cover Image
-            </h3>
+            <h3 className={`text-right text-[#AAAAAA]`}>Add Cover Image</h3>
           </label>
         </div>
         <div className="flex flex-row justify-start gap-x-5 w-full">
@@ -66,9 +68,21 @@ export const Header = ({
             <Image src="/icons/clock.svg" alt="Clock" width={18} height={18} />
             Set Deadline
           </label>
-          <div className="flex items-center gap-x-2 text-[#AAAAAA] hover:cursor-pointer">
+          <div className="flex items-center gap-x-2 text-[#AAAAAA] hover:cursor-pointer relative" onClick={() => setSelectDropdown(!selectDropdown)}>
             <AiFillCaretDown size={18} color="black" />
-            Select Form Type
+            {checklistType}
+            {selectDropdown && (<div className="w-full absolute top-3 flex flex-col gap-y-2 bg-white p-3 z-20 shadow-md rounded-md">
+              {options.map((option, index) => {
+                return (
+                  <div key={index} onClick={() => {
+                    handleFormType(option.value)
+                    setSelectDropdown(false)
+                  }} className="text-primary ">
+                    {option.value}
+                  </div>
+                );
+              })}
+            </div>)}
           </div>
         </div>
       </div>
