@@ -10,6 +10,7 @@ import { useCookie } from "@/hooks/useCookie";
 import { urls } from "@/utils/urls";
 import _debounnce from "lodash/debounce";
 import Toast from "awesome-toast-component";
+import { Section } from "@/components/Dashboard/Section";
 
 export default function CreateCheckList() {
   const { query } = useRouter();
@@ -18,9 +19,19 @@ export default function CreateCheckList() {
     title: "",
     description: "",
     coverImgUrl: "",
+    checklistType: "Select Form Type",
   });
   const { token } = useCookie();
   const imgUploadRef = useRef();
+
+  const options = [
+    {
+      value: "Single Submission",
+    },
+    {
+      value: "Multiple Submission",
+    },
+  ];
 
   const debounceEditHeader = useRef(
     _debounnce(async (updatedCheckList) => {
@@ -106,9 +117,11 @@ export default function CreateCheckList() {
   }
 
   async function removeQuestion(id) {
+    console.log(checklistData.length);
     if (checklistData.length === 1) {
       return new Toast("There has to be at least 1 question");
     }
+
     try {
       await axios.delete(`${urls.deleteQuestion}${id}`, {
         headers: {
@@ -150,9 +163,7 @@ export default function CreateCheckList() {
     uploadImage(file);
   }
 
-  const [checklistData, setCheckListData] = useState([
-    <CheckListEdit removeForm={removeForm} key={Date.now()} />,
-  ]);
+  const [checklistData, setCheckListData] = useState([]);
 
   useEffect(() => {
     setCheckList({
@@ -160,6 +171,7 @@ export default function CreateCheckList() {
       title: checklist?.title,
       description: checklist?.description,
       coverImgUrl: checklist?.coverImgURL,
+      checklistType: checklist?.checklistType,
     });
 
     const questions = checklist?.questions;
@@ -194,16 +206,19 @@ export default function CreateCheckList() {
   function duplicateForm(data) {
     setCheckListData((checklistData) => [
       ...checklistData,
-      <CheckListEdit
-        removeForm={() => removeQuestion(data.id)}
-        id={data.id}
-        answerType={data.answerType}
-        required={data.required}
-        question={data.question}
-        setDescription={data.description}
-        questionOptions={data.options}
-        copyQuestion={() => copyQuestion(data.id)}
-      />,
+      <div key={data.id}>
+        <CheckListEdit
+          removeForm={() => removeQuestion(data.id)}
+          id={data.id}
+          answerType={data.answerType}
+          required={data.required}
+          question={data.question}
+          setDescription={data.description}
+          questionOptions={data.options}
+          copyQuestion={() => copyQuestion(data.id)}
+          key={data.id}
+        />
+      </div>,
     ]);
   }
 
@@ -213,6 +228,15 @@ export default function CreateCheckList() {
       updatedList.splice(index, 1);
       return updatedList;
     });
+  }
+
+  function handleFormType(value) {
+    setCheckList((prevData) => ({
+      ...prevData,
+      checklistType: value,
+    }));
+
+    debounceEditHeader({ ...checkList, checklistType: value });
   }
 
   return (
@@ -228,12 +252,16 @@ export default function CreateCheckList() {
           handleCoverImg={handleCoverImg}
           handleChange={handleChange}
           imgUploadRef={imgUploadRef}
+          checklistType={checkList.checklistType}
+          options={options}
+          handleFormType={handleFormType}
         />
         <div className="w-full flex flex-row mt-5 gap-x-3">
-          <div className="flex sm:w-[65%] w-full flex-col gap-y-5">
+          <div className="flex sm:w-[65%] w-full flex-col gap-y-5 bg-white">
             {checklistData.map((component, index) => {
               return <div key={index}>{component}</div>;
             })}
+            <Section />
           </div>
           <SideBar addForm={() => createNewQuestion(query.id)} />
         </div>
