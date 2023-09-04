@@ -4,7 +4,7 @@ import Link from "next/link";
 import { AiOutlineMenu, AiOutlineCloseCircle } from "react-icons/ai";
 import { AnimatePresence, motion } from "framer-motion";
 
-export default function Navbar() {
+export default function Navbar({ userData }) {
   const [openMobileNav, setOpenMobileNav] = useState(false);
   const variants = {
     hidden: { opacity: 0, y: -20 },
@@ -14,7 +14,7 @@ export default function Navbar() {
   return (
     <>
       <nav
-        className={`justify-between items-center gap-x-3 py-2 px-3 text-primary font-medium border flex-wrap lg:flex hidden`}
+        className={`justify-between items-center gap-x-3 py-2 px-3 text-primary font-medium border flex-wrap lg:flex hidden w-full`}
       >
         <Link href="/">
           <div>
@@ -26,11 +26,22 @@ export default function Navbar() {
             />
           </div>
         </Link>
-        <div className="flex justify-center gap-x-10 text-md items-center">
-          <Link href="/about">About MiData</Link>
-          <Link href="/pricing">Pricing</Link>
-          <Link href="/contact">Contact Us</Link>
-        </div>
+        {userData ? (
+          <div className="flex flex-col text-primary font-semibold">
+            <p>
+              {userData?.firstName} {userData?.lastName}
+            </p>
+            <p>{userData?.emailAddress}</p>
+          </div>
+        ) : (
+          <>
+            <div className="flex justify-center gap-x-10 text-md items-center">
+              <Link href="/about">About MiData</Link>
+              <Link href="/pricing">Pricing</Link>
+              <Link href="/contact">Contact Us</Link>
+            </div>
+          </>
+        )}
         <div className="flex justify-center gap-x-10 text-md items-center">
           <Link href="/login" className="font-semibold">
             Login
@@ -54,6 +65,14 @@ export default function Navbar() {
               className="object-contain"
             />
           </Link>
+          {userData && (
+            <div className="flex flex-col text-primary font-semibold">
+              <p>
+                {userData?.firstName} {userData?.lastName}
+              </p>
+              <p>{userData?.emailAddress}</p>
+            </div>
+          )}
           <AiOutlineMenu
             size={35}
             className="hover:cursor-pointer"
