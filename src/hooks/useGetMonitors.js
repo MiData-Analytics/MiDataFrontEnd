@@ -51,9 +51,6 @@ export function useGetMonitor() {
             Authorization: `Bearer ${token}`,
           },
         });
-
-        console.log(response.data)
-
         setMonitor(response.data);
         setIsLoading(false);
       } catch (error) {
