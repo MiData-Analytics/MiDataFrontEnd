@@ -4,7 +4,7 @@ import { useCookie } from "./useCookie";
 import { urls } from "@/utils/urls";
 
 export function useGetMonitors() {
-  const [monitors, setMonitors] = useState([{}]);
+  const [monitors, setMonitors] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setError] = useState(false);
   const { token } = useCookie();
