@@ -18,41 +18,6 @@ export default function Checklists() {
   const { push } = useRouter();
   const { token } = useCookie();
   const { checklists, isLoading, isError } = useGetChecklists();
-  const checkList = [
-    {
-      title: "Early Warning Signs",
-      monitors: 35,
-      author: "Timmy Adeyeloja",
-      percentageComplete: 90,
-      daysRemaining: 3,
-      status: "closed",
-    },
-    {
-      title: "Tornado Alert",
-      monitors: 10,
-      author: "Timmy Adeyeloja",
-      percentageComplete: 90,
-      daysRemaining: 3,
-      status: "open",
-    },
-    {
-      title: "Training Data",
-      monitors: 35,
-      author: "Timmy Oladayo",
-      percentageComplete: 90,
-      daysRemaining: 10,
-      status: "closed",
-    },
-
-    {
-      title: "Early Warning Signs",
-      monitors: 35,
-      author: "Timmy Adeyeloja",
-      percentageComplete: 90,
-      daysRemaining: 3,
-      status: "closed",
-    },
-  ];
 
   async function initializeChecklist() {
     new Toast("Initializing Checklist...");
