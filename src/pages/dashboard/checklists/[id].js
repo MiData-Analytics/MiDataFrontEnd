@@ -18,10 +18,12 @@ export default function CreateCheckList() {
   const [checkList, setCheckList] = useState({
     title: "",
     description: "",
+    deadline: "",
     coverImgUrl: "",
     checklistType: "Select Form Type",
   });
   const { token } = useCookie();
+  const [startDate, setStartDate] = useState(new Date());
   const imgUploadRef = useRef();
 
   const options = [
@@ -239,6 +241,16 @@ export default function CreateCheckList() {
     debounceEditHeader({ ...checkList, checklistType: value });
   }
 
+  function setDeadline(date) {
+    setCheckList((checklist) => ({
+      ...checklist,
+      deadline: date,
+    }));
+
+    setStartDate(date);
+    debounceEditHeader({ ...checkList, deadline: date });
+  }
+
   return (
     <DashboardLayout>
       <Head>
@@ -255,6 +267,8 @@ export default function CreateCheckList() {
           checklistType={checkList.checklistType}
           options={options}
           handleFormType={handleFormType}
+          startDate={startDate}
+          setDeadline={setDeadline}
         />
         <div className="w-full flex flex-row mt-5 gap-x-3">
           <div className="flex sm:w-[65%] w-full flex-col gap-y-5 bg-white">
