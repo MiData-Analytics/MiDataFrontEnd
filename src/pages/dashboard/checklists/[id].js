@@ -261,7 +261,6 @@ export default function CreateCheckList() {
             {checklistData.map((component, index) => {
               return <div key={index}>{component}</div>;
             })}
-            <Section />
           </div>
           <SideBar addForm={() => createNewQuestion(query.id)} />
         </div>
