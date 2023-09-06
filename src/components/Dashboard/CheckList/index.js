@@ -39,14 +39,14 @@ export const CheckList = ({
             alt="status"
           />
         </div>
-        <div className="flex gap-2 w-full">
-          <div className="py-1 sm:px-8 px-3 bg-[#AAAAAA] flex justify-center gap-x-1 rounded-md">
+        <div className="flex gap-2 gap-x-5 w-full">
+          <div className="py-1 sm:px-10 px-3 bg-[#AAAAAA] flex justify-center gap-x-1 rounded-md">
             <span className="text-primary font-medium">{monitors} </span>
             <span className="text-[#666666]">Monitors</span>
           </div>
           <Link
             href={``}
-            className="py-1 sm:px-8 px-3 bg-[#2ACDA6] flex justify-center gap-x-1 rounded-md"
+            className="py-1 sm:px-10 px-3 bg-[#2ACDA6]/40 flex justify-center gap-x-1 rounded-md text-[#444444]"
           >
             Preview Form
           </Link>
