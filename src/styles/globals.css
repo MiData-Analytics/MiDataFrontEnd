@@ -11,6 +11,7 @@
 /* For WebKit browsers (Chrome, Safari) */
 ::-webkit-scrollbar {
   width: 5px; /* width of the scrollbar */
+  height: 5px;
 }
 
 ::-webkit-scrollbar-track {
