@@ -1,10 +1,25 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { BsTrash3Fill } from "react-icons/bs";
+import axios from "axios";
+import { urls } from "@/utils/urls";
+import { useCookie } from "@/hooks/useCookie";
+import Toast from "awesome-toast-component";
+import _debounce from "lodash/debounce";
 
-export const Section = ({ sectionTitle, sectionDescription }) => {
+export const Section = ({
+  sectionTitle,
+  sectionDescription,
+  deleteSection,
+  checklistId,
+  sectionId,
+}) => {
+  
   const [section, setSection] = useState({
     title: "",
     description: "",
   });
+
+  const { token } = useCookie();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -12,23 +27,44 @@ export const Section = ({ sectionTitle, sectionDescription }) => {
       ...prevData,
       [name]: value,
     }));
+
+    updateSection({ ...section, [name]: value });
   };
 
+  const updateSection = useRef(
+    _debounce(async (updatedSection) => {
+      try {
+        const response = await axios.patch(
+          `${urls.updateSection}${sectionId}`,
+          updatedSection,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+        }
+      } catch (error) {
+        console.error(error);
+        new Toast("Failed to update section");
+      }
+    }, 500)
+  ).current;
+
   useEffect(() => {
-        setSection((prevData) => (
-            {
-                ...prevData,
-                title:sectionTitle,
-                description:sectionDescription
-            }
-        ))
-  }, [])
-  
+    setSection((prevData) => ({
+      ...prevData,
+      title: sectionTitle,
+      description: sectionDescription,
+    }));
+  }, []);
 
   return (
-    <div className={`w-full rounded-lg shadow-md h-[30vh] relative`}>
-      <div className="h-[4vh] rounded-t-lg bg-[#6C3FEE] z-50 "></div>
-      <div className={`flex flex-col p-5 h-full w-full z-10`}>
+    <div className={`w-full rounded-lg shadow-md min-h-[250px] relative`}>
+      <div className="h-[4vh] rounded-t-lg bg-[#6C3FEE] z-50"></div>
+      <div className={`flex flex-col justify-between p-5 w-full z-10`}>
         <div className="flex flex-row justify-between w-full z-10">
           <div className="flex flex-col z-10">
             <input
@@ -49,26 +85,12 @@ export const Section = ({ sectionTitle, sectionDescription }) => {
               onChange={handleChange}
             ></textarea>
           </div>
-          {/* <label
-              className="flex flex-col items-end hover:cursor-pointer"
-              htmlFor="headerImg"
-            >
-              <input
-                type="file"
-                accept=".jpg"
-                className="hidden"
-                id="headerImg"
-                onChange={handleCoverImg}
-                ref={imgUploadRef}
-              />
-              <Image
-                src="/icons/gallery.svg"
-                alt="Gallery"
-                width={30}
-                height={30}
-              />
-              <h3 className={`text-right text-[#AAAAAA]`}>Add Cover Image</h3>
-            </label> */}
+        </div>
+        <div className="flex justify-end w-full">
+          <BsTrash3Fill
+            className="hover:cursor-pointer"
+            onClick={deleteSection}
+          />
         </div>
       </div>
     </div>
