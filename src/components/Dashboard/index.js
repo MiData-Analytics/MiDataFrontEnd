@@ -30,17 +30,20 @@ import { TailSpin } from "react-loader-spinner";
 const firstLinks = [
   {
     url: "/dashboard",
+    tag: "dashboard",
     title: "Dashboard",
     icon: <LuLayoutDashboard size={25} />,
   },
   {
     url: "/dashboard/checklists",
+    tag: "checklists",
     title: "Checklists",
     icon: <TbChecklist size={25} />,
   },
   {
     url: "/dashboard/monitors",
     title: "My Monitors",
+    tag: "monitors",
     icon: <HiUsers size={25} />,
   },
 ];
@@ -49,6 +52,7 @@ const secondLinks = [
   {
     url: "/dashboard/subscriptions",
     title: "Subscriptions",
+    tag: "subscriptions",
     icon: <BiWallet size={25} />,
   },
 ];
@@ -69,7 +73,7 @@ export function Sidebar() {
     }
   }
 
-  function NavLink({ url, title, icon, onClick }) {
+  function NavLink({ url, title, icon, onClick, tag }) {
     const { pathname } = useRouter();
 
     return (
@@ -130,6 +134,7 @@ export function Sidebar() {
                       key={index}
                       url={link.url}
                       title={link.title}
+                      tag={link.tag}
                       icon={link.icon}
                       onClick={closeNav}
                     />
@@ -142,6 +147,7 @@ export function Sidebar() {
                       url={link.url}
                       title={link.title}
                       icon={link.icon}
+                      tag={link.tag}
                       onClick={closeNav}
                     />
                   );
@@ -188,6 +194,7 @@ export function Sidebar() {
                   url={link.url}
                   title={link.title}
                   icon={link.icon}
+                  tag={link.tag}
                 />
               );
             })}
@@ -200,6 +207,7 @@ export function Sidebar() {
                   url={link.url}
                   title={link.title}
                   icon={link.icon}
+                  tag={link.tag}
                 />
               );
             })}
@@ -294,7 +302,7 @@ export function Header() {
   );
 }
 
-export function SearchBar({ searchTerm, setSearchTerm,placeholder }) {
+export function SearchBar({ searchTerm, setSearchTerm, placeholder }) {
   return (
     <div className="border px-2 py-3 rounded-md w-full flex items-center">
       <Image
