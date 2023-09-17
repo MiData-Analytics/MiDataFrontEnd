@@ -69,3 +69,37 @@ export function useGetMonitor() {
     isError,
   };
 }
+
+export function useGetQuestions(id) {
+  const [questions, setQuestions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setError] = useState(true);
+  const { token } = useCookie();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${urls.monitorGetQuestion}${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setQuestions(response.data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error("Error fetching user data", error);
+        setError(true);
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id, token]);
+
+  return {
+    questions,
+    isLoading,
+    isError,
+  };
+}
