@@ -1,22 +1,27 @@
+import React, { useState } from "react";
 import Image from "next/image";
 import { AiFillCaretDown } from "react-icons/ai";
-import { useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export const Header = ({
   title,
   description,
-  coverImgURL,
   handleChange,
   handleCoverImg,
   imgUploadRef,
   checklistType,
   options,
   handleFormType,
+  startDate,
+  setDeadline,
 }) => {
   const [selectDropdown, setSelectDropdown] = useState(false);
 
   return (
-    <div className={`sm:w-[65%] w-full rounded-lg shadow-md h-[30vh] relative`}>
+    <div
+      className={`sm:w-[65%] w-full rounded-lg shadow-md max-h-[30vh] relative`}
+    >
       <div className="h-[4vh] rounded-t-lg bg-[#6C3FEE] z-50 "></div>
       <div className={`flex flex-col p-5 h-full w-full z-10`}>
         <div className="flex flex-row justify-between w-full z-10">
@@ -60,7 +65,12 @@ export const Header = ({
             <h3 className={`text-right text-[#AAAAAA]`}>Add Cover Image</h3>
           </label>
         </div>
-        <div className="flex flex-row justify-start gap-x-5 w-full">
+        <div className="flex sm:flex-row flex-col justify-start gap-x-5 w-full">
+          <DatePicker
+            selected={startDate}
+            onChange={(date) => setDeadline(date)}
+            className="w-28 z-30 p-2 border border-gray-300 rounded-md"
+          />
           <label
             className="flex items-center gap-x-2 text-[#AAAAAA] hover:cursor-pointer"
             htmlFor="deadline"
@@ -68,21 +78,30 @@ export const Header = ({
             <Image src="/icons/clock.svg" alt="Clock" width={18} height={18} />
             Set Deadline
           </label>
-          <div className="flex items-center gap-x-2 text-[#AAAAAA] hover:cursor-pointer relative" onClick={() => setSelectDropdown(!selectDropdown)}>
+          <div
+            className="flex items-center gap-x-2 text-[#AAAAAA] hover:cursor-pointer relative"
+            onClick={() => setSelectDropdown(!selectDropdown)}
+          >
             <AiFillCaretDown size={18} color="black" />
             {checklistType}
-            {selectDropdown && (<div className="w-full absolute top-3 flex flex-col gap-y-2 bg-white p-3 z-20 shadow-md rounded-md">
-              {options.map((option, index) => {
-                return (
-                  <div key={index} onClick={() => {
-                    handleFormType(option.value)
-                    setSelectDropdown(false)
-                  }} className="text-primary ">
-                    {option.value}
-                  </div>
-                );
-              })}
-            </div>)}
+            {selectDropdown && (
+              <div className="w-full absolute top-3 flex flex-col gap-y-2 bg-white p-3 z-20 shadow-md rounded-md">
+                {options.map((option, index) => {
+                  return (
+                    <div
+                      key={index}
+                      onClick={() => {
+                        handleFormType(option.value);
+                        setSelectDropdown(false);
+                      }}
+                      className="text-primary "
+                    >
+                      {option.value}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
       </div>
