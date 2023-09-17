@@ -25,6 +25,7 @@ export default function CreateCheckList() {
   const { token } = useCookie();
   const [startDate, setStartDate] = useState(new Date());
   const imgUploadRef = useRef();
+  const [lastSectionID, setLastSectionID] = useState("");
 
   const options = [
     {
@@ -100,11 +101,32 @@ export default function CreateCheckList() {
     }
   }
 
+  async function removeSection(id) {
+    try {
+      const response = await axios.delete(`${urls.deleteQuestion}${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 200) {
+        const section = checklistData.find(
+          (section) => section.props.id === id
+        );
+        
+        removeForm(section.key);
+      }
+    } catch (error) {
+      console.error(error);
+      new Toast("Failed to delete section");
+    }
+  }
+
   async function createNewQuestion(id) {
     try {
       const response = await axios.post(
         urls.newQuestion,
-        { id },
+        { id, sectionId: lastSectionID },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -115,6 +137,29 @@ export default function CreateCheckList() {
       duplicateForm(response.data.newQuestion);
     } catch (error) {
       new Toast("Failed to create question");
+      console.error(error);
+    }
+  }
+
+  async function createNewSection() {
+    try {
+      const response = await axios.post(
+        urls.newSection,
+        {
+          checklist: query.id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 201) {
+        addSection(response.data);
+      }
+    } catch (error) {
+      new Toast("Failed to create new section");
     }
   }
 
@@ -125,16 +170,18 @@ export default function CreateCheckList() {
     }
 
     try {
-      await axios.delete(`${urls.deleteQuestion}${id}`, {
+      const res = await axios.delete(`${urls.deleteQuestion}${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      const question = checklistData.find(
-        (question) => question.props.id === id
-      );
-      removeForm(question.key);
+      if (res.status === 200) {
+        const question = checklistData.find(
+          (question) => question.props.id === id
+        );
+        removeForm(question.key);
+      }
     } catch (error) {
       new Toast("Failed to delete question");
     }
@@ -168,34 +215,79 @@ export default function CreateCheckList() {
   const [checklistData, setCheckListData] = useState([]);
 
   useEffect(() => {
+    const renderData = checklist?.checklist;
+    const sections = checklist?.sections;
+
+    if (sections) {
+      let [lastSection] = [...sections].reverse();
+      setLastSectionID(lastSection.id);
+    }
+
     setCheckList({
       ...checkList,
-      title: checklist?.title,
-      description: checklist?.description,
+      title: checklist?.sections[0].title,
+      description: checklist?.sections[0].description,
       coverImgUrl: checklist?.coverImgURL,
-      checklistType: checklist?.checklistType,
+      checklistType: renderData?.checklistType,
     });
 
-    const questions = checklist?.questions;
+    const elements = sections?.map((data, index) => {
+      if (index === 0) {
+        return data?.questions?.map((question, innerIndex) => {
+          return (
+            <CheckListEdit
+              removeForm={() => removeQuestion(question.id)}
+              id={question.id}
+              answerType={question.answerType}
+              required={question.required}
+              question={question.question}
+              setDescription={question.description}
+              questionOptions={question.options}
+              copyQuestion={() => copyQuestion(question.id)}
+              key={innerIndex}
+            />
+          );
+        });
+      }
 
-    const questionElements = questions?.map((question, index) => (
-      <CheckListEdit
-        removeForm={() => removeQuestion(question.id)}
-        id={question.id}
-        answerType={question.answerType}
-        required={question.required}
-        question={question.question}
-        setDescription={question.description}
-        questionOptions={question.options}
-        copyQuestion={() => copyQuestion(question.id)}
-        key={index}
-      />
-    ));
+      return (
+        <>
+          <Section
+            sectionTitle={data.title}
+            sectionDescription={data.description}
+            checklistId={query.id}
+            sectionId={data.id}
+            key={index}
+            deleteSection={() => removeSection(data.id)}
+          />
+          {data?.questions?.length > 0 && (
+            <>
+              {data?.questions?.map((question, innerIndex) => {
+                return (
+                  <CheckListEdit
+                    removeForm={() => removeQuestion(question.id)}
+                    id={question.id}
+                    answerType={question.answerType}
+                    required={question.required}
+                    question={question.question}
+                    setDescription={question.description}
+                    questionOptions={question.options}
+                    copyQuestion={() => copyQuestion(question.id)}
+                    key={innerIndex}
+                  />
+                );
+              })}
+            </>
+          )}
+        </>
+      );
+    });
 
-    if (questionElements) {
-      setCheckListData([...questionElements]);
+    if (elements) {
+      console.log(elements)
+      setCheckListData([...elements]);
     }
-  }, [checklist]);
+  }, [checklist?.sections]);
 
   function handleChange(e) {
     const name = e.target.name;
@@ -219,6 +311,19 @@ export default function CreateCheckList() {
           questionOptions={data.options}
           copyQuestion={() => copyQuestion(data.id)}
           key={data.id}
+        />
+      </div>,
+    ]);
+  }
+
+  function addSection(data) {
+    setCheckListData((checklistdata) => [
+      ...checklistdata,
+      <div key={data.id}>
+        <Section
+          sectionId={data.id}
+          sectionTitle={data.title}
+          sectionDescription={data.description}
         />
       </div>,
     ]);
@@ -273,10 +378,17 @@ export default function CreateCheckList() {
         <div className="w-full flex flex-row mt-5 gap-x-3">
           <div className="flex sm:w-[65%] w-full flex-col gap-y-5 bg-white">
             {checklistData.map((component, index) => {
-              return <div key={index}>{component}</div>;
+              return (
+                <div key={index} className="flex flex-col gap-y-5">
+                  {component}
+                </div>
+              );
             })}
           </div>
-          <SideBar addForm={() => createNewQuestion(query.id)} />
+          <SideBar
+            addForm={() => createNewQuestion(query.id)}
+            addSection={() => createNewSection(query.id)}
+          />
         </div>
       </form>
     </DashboardLayout>
