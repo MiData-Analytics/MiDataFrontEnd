@@ -40,10 +40,12 @@ export const CheckList = ({
           />
         </div>
         <div className="flex gap-2 gap-x-5 w-full">
-          <div className="py-1 sm:px-10 px-3 bg-[#AAAAAA] flex justify-center gap-x-1 rounded-md">
-            <span className="text-primary font-medium">{monitors} </span>
-            <span className="text-[#666666]">Monitors</span>
-          </div>
+          <Link href={`/dashboard/checklists/access/${id}`}>
+            <div className="py-1 sm:px-10 px-3 bg-[#AAAAAA] flex justify-center gap-x-1 rounded-md">
+              <span className="text-primary font-medium">{monitors} </span>
+              <span className="text-[#666666]">Monitors</span>
+            </div>
+          </Link>
           <Link
             href={``}
             className="py-1 sm:px-10 px-3 bg-[#2ACDA6]/40 flex justify-center gap-x-1 rounded-md text-[#444444]"
@@ -299,23 +301,23 @@ export const Answer = ({
       return new Toast("There has to be at least two options");
     }
 
-     setFormData((prevData) => {
-       const newOptions = [...prevData.options];
-       newOptions.splice(index, 1);
+    setFormData((prevData) => {
+      const newOptions = [...prevData.options];
+      newOptions.splice(index, 1);
 
-       return {
-         ...prevData,
-         options: newOptions,
-       };
-     });
+      return {
+        ...prevData,
+        options: newOptions,
+      };
+    });
 
-     const newOptions = [...formData.options];
-     newOptions.splice(index, 1);
+    const newOptions = [...formData.options];
+    newOptions.splice(index, 1);
 
-     editQuestion({
-       ...formData,
-       options: newOptions,
-     });
+    editQuestion({
+      ...formData,
+      options: newOptions,
+    });
 
     setRadioComponent((components) => {
       const updatedList = [...components];
@@ -558,22 +560,22 @@ export const CheckListEdit = ({
     {
       value: "Check Boxes",
     },
-    {
-      value: "File Upload",
-    },
-    {
-      value: "Linear Scale",
-    },
-    {
-      value: "Multiple Choice Grid",
-    },
-    {
-      value: "Checkbox Grid",
-    },
-    {
-      value: "Date",
-    },
-    { value: "Time" },
+    // {
+    //   value: "File Upload",
+    // },
+    // {
+    //   value: "Linear Scale",
+    // },
+    // {
+    //   value: "Multiple Choice Grid",
+    // },
+    // {
+    //   value: "Checkbox Grid",
+    // },
+    // {
+    //   value: "Date",
+    // },
+    // { value: "Time" },
   ];
 
   const debounceEditQuestion = useRef(
@@ -644,7 +646,7 @@ export const CheckListEdit = ({
   };
 
   return (
-    <div className="w-full rounded-lg shadow-md min-h-[45vh] h-fit relative flex justify-between flex-col">
+    <div className="w-full rounded-lg shadow-md min-h-[280px] h-fit relative flex justify-between flex-col">
       <div>
         <div className="h-[4vh] rounded-t-lg bg-[#6C3FEE]"></div>
         <div className="flex justify-between flex-wrap">
@@ -768,7 +770,7 @@ export const CheckListEdit = ({
   );
 };
 
-export const SideBar = ({ addForm }) => {
+export const SideBar = ({ addForm, addSection }) => {
   function inDevelopment() {
     new Toast("Still in development");
   }
@@ -797,7 +799,7 @@ export const SideBar = ({ addForm }) => {
     {
       path: "/icons/section.svg",
       title: "Create Sub Section",
-      call: inDevelopment,
+      call: addSection,
     },
   ];
 
