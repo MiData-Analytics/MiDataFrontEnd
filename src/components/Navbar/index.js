@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { AiOutlineMenu, AiOutlineCloseCircle } from "react-icons/ai";
 import { AnimatePresence, motion } from "framer-motion";
+import { useCookies } from "react-cookie";
+import { useRouter } from "next/router";
 
 export default function Navbar({ userData }) {
   const [openMobileNav, setOpenMobileNav] = useState(false);
@@ -10,6 +12,18 @@ export default function Navbar({ userData }) {
     hidden: { opacity: 0, y: -20 },
     visible: { opacity: 1, y: 0 },
   };
+  const [cookies, setCookie, removeCookie] = useCookies(["token"]);
+  const { push } = useRouter();
+
+  function logOut() {
+    0;
+    removeCookie("token", {
+      path: "/",
+      maxAge: 3600 * 24 * 3,
+      sameSite: true,
+    });
+    push("/login");
+  }
 
   return (
     <>
@@ -42,17 +56,26 @@ export default function Navbar({ userData }) {
             </div>
           </>
         )}
-        <div className="flex justify-center gap-x-10 text-md items-center">
-          <Link href="/login" className="font-semibold">
-            Login
-          </Link>
-          <Link
-            href="/signup"
-            className="px-10 py-2 bg-primary text-white rounded-[90px] font-extrabold"
+        {userData ? (
+          <button
+            className="px-4 py-1 bg-primary text-white rounded-full"
+            onClick={logOut}
           >
-            Sign Up
-          </Link>
-        </div>
+            Log Out
+          </button>
+        ) : (
+          <div className="flex justify-center gap-x-10 text-md items-center">
+            <Link href="/login" className="font-semibold">
+              Login
+            </Link>
+            <Link
+              href="/signup"
+              className="px-10 py-2 bg-primary text-white rounded-[90px] font-extrabold"
+            >
+              Sign Up
+            </Link>
+          </div>
+        )}
       </nav>
       <nav className="flex lg:hidden w-full relative h-[10vh] shadow-lg">
         <div className="flex flex-row justify-between items-center w-full pr-2">
@@ -101,23 +124,43 @@ export default function Navbar({ userData }) {
                 />
               </div>
 
-              <div className="flex flex-col text-primary items-center text-xl">
-                <Link href="/">Home</Link>
-                <Link href="/about">About MiData</Link>
-                <Link href="/pricing">Pricing</Link>
-                <Link href="/contact">Contact Us</Link>
-              </div>
+              {userData ? (
+                <div className="flex flex-col justify-center items-center">
+                  {userData.emailAddress}
+                  <>
+                    {userData.firstName} {userData.lastName}
+                  </>
+                </div>
+              ) : (
+                <div className="flex flex-col text-primary items-center text-xl">
+                  <Link href="/">Home</Link>
+                  <Link href="/about">About MiData</Link>
+                  <Link href="/pricing">Pricing</Link>
+                  <Link href="/contact">Contact Us</Link>
+                </div>
+              )}
 
               <div className="flex flex-col items-center text-primary mt-5">
-                <Link href="/login" className="font-semibold">
-                  Login
-                </Link>
-                <Link
-                  href="/signup"
-                  className="px-10 py-2 bg-primary text-white rounded-[90px] font-extrabold"
-                >
-                  Sign Up
-                </Link>
+                {userData ? (
+                  <button
+                    className="px-4 py-1 bg-primary text-white rounded-full"
+                    onClick={logOut}
+                  >
+                    Log Out
+                  </button>
+                ) : (
+                  <>
+                    <Link href="/login" className="font-semibold">
+                      Login
+                    </Link>
+                    <Link
+                      href="/signup"
+                      className="px-10 py-2 bg-primary text-white rounded-[90px] font-extrabold"
+                    >
+                      Sign Up
+                    </Link>
+                  </>
+                )}
               </div>
             </motion.div>
           )}
