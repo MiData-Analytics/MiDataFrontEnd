@@ -549,7 +549,7 @@ export function WorkBoard() {
       </div>
       {/* PC View  */}
       <div className="flex w-full m-3 gap-3 justify-between items-center p-3 sm:flex-row flex-col">
-        <MonitorCountCard count={monitors.length} />
+        <MonitorCountCard count={monitors?.length} />
         <SubmissionRateCard />
         <Countdown />
       </div>
