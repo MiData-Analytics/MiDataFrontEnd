@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, Fragment } from "react";
 import Head from "next/head";
 import { DashboardLayout } from "@/layouts/Dashboard";
 import { Header } from "@/components/Dashboard/CheckList/Header";
@@ -14,7 +14,9 @@ import { Section } from "@/components/Dashboard/Section";
 
 export default function CreateCheckList() {
   const { query } = useRouter();
-  const { checklist, isLoading, isError } = useGetChecklist(query.id);
+  const { checklist, isLoading, isError, refetchData } = useGetChecklist(
+    query.id
+  );
   const [checkList, setCheckList] = useState({
     title: "",
     description: "",
@@ -25,7 +27,8 @@ export default function CreateCheckList() {
   const { token } = useCookie();
   const [startDate, setStartDate] = useState(new Date());
   const imgUploadRef = useRef();
-  const [lastSectionID, setLastSectionID] = useState("");
+  const [lastSectionID, setLastSectionID] = useState();
+  const [checklistData, setCheckListData] = useState([]);
 
   const options = [
     {
@@ -71,7 +74,7 @@ export default function CreateCheckList() {
         }
       );
 
-      duplicateForm(response.data.question);
+      refetchData(query?.id);
     } catch (error) {
       new Toast("Could not copy that question");
     }
@@ -103,18 +106,17 @@ export default function CreateCheckList() {
 
   async function removeSection(id) {
     try {
-      const response = await axios.delete(`${urls.deleteQuestion}${id}`, {
+      const response = await axios.delete(`${urls.deleteSection}${id}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
       if (response.status === 200) {
-        const section = checklistData.find(
-          (section) => section.props.id === id
-        );
-        
-        removeForm(section.key);
+        refetchData(query?.id);
+        // setCheckListData((prevData) =>
+        //   prevData.filter((section) => section?.key !== id)
+        // );
       }
     } catch (error) {
       console.error(error);
@@ -134,7 +136,8 @@ export default function CreateCheckList() {
         }
       );
 
-      duplicateForm(response.data.newQuestion);
+      // duplicateForm(response.data.newQuestion);
+      refetchData(query?.id);
     } catch (error) {
       new Toast("Failed to create question");
       console.error(error);
@@ -156,7 +159,8 @@ export default function CreateCheckList() {
       );
 
       if (response.status === 201) {
-        addSection(response.data);
+        // addSection(response.data);
+        refetchData(query?.id);
       }
     } catch (error) {
       new Toast("Failed to create new section");
@@ -164,11 +168,6 @@ export default function CreateCheckList() {
   }
 
   async function removeQuestion(id) {
-    console.log(checklistData.length);
-    if (checklistData.length === 1) {
-      return new Toast("There has to be at least 1 question");
-    }
-
     try {
       const res = await axios.delete(`${urls.deleteQuestion}${id}`, {
         headers: {
@@ -177,12 +176,15 @@ export default function CreateCheckList() {
       });
 
       if (res.status === 200) {
-        const question = checklistData.find(
-          (question) => question.props.id === id
-        );
-        removeForm(question.key);
+        refetchData(query?.id);
+        // setCheckListData((prevData) =>
+        //   prevData.map((section) =>
+        //     section.filter((question) => question.key !== id)
+        //   )
+        // );
       }
     } catch (error) {
+      console.error(error);
       new Toast("Failed to delete question");
     }
   }
@@ -212,15 +214,13 @@ export default function CreateCheckList() {
     uploadImage(file);
   }
 
-  const [checklistData, setCheckListData] = useState([]);
-
   useEffect(() => {
     const renderData = checklist?.checklist;
     const sections = checklist?.sections;
 
     if (sections) {
-      let [lastSection] = [...sections].reverse();
-      setLastSectionID(lastSection.id);
+      const lastSectionIndex = sections?.length - 1;
+      setLastSectionID(sections[lastSectionIndex].id);
     }
 
     setCheckList({
@@ -231,7 +231,7 @@ export default function CreateCheckList() {
       checklistType: renderData?.checklistType,
     });
 
-    const elements = sections?.map((data, index) => {
+    const elements = checklist?.sections?.map((data, index) => {
       if (index === 0) {
         return data?.questions?.map((question, innerIndex) => {
           return (
@@ -244,20 +244,20 @@ export default function CreateCheckList() {
               setDescription={question.description}
               questionOptions={question.options}
               copyQuestion={() => copyQuestion(question.id)}
-              key={innerIndex}
+              key={question.id}
             />
           );
         });
       }
 
       return (
-        <>
+        <Fragment key={data.id}>
           <Section
             sectionTitle={data.title}
             sectionDescription={data.description}
             checklistId={query.id}
             sectionId={data.id}
-            key={index}
+            key={data.id}
             deleteSection={() => removeSection(data.id)}
           />
           {data?.questions?.length > 0 && (
@@ -273,21 +273,20 @@ export default function CreateCheckList() {
                     setDescription={question.description}
                     questionOptions={question.options}
                     copyQuestion={() => copyQuestion(question.id)}
-                    key={innerIndex}
+                    key={question.id}
                   />
                 );
               })}
             </>
           )}
-        </>
+        </Fragment>
       );
     });
 
     if (elements) {
-      console.log(elements)
       setCheckListData([...elements]);
     }
-  }, [checklist?.sections]);
+  }, [checklist]);
 
   function handleChange(e) {
     const name = e.target.name;
@@ -324,6 +323,8 @@ export default function CreateCheckList() {
           sectionId={data.id}
           sectionTitle={data.title}
           sectionDescription={data.description}
+          key={data.id}
+          deleteSection={() => removeSection(data.id)}
         />
       </div>,
     ]);
