@@ -11,6 +11,7 @@ import { useCookie } from "@/hooks/useCookie";
 import { urls } from "@/utils/urls";
 import Toast from "awesome-toast-component";
 import { useGetChecklists } from "@/hooks/useGetChecklists";
+import { TailSpin } from "react-loader-spinner";
 
 export default function Checklists() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -71,11 +72,11 @@ export default function Checklists() {
           <p>
             We've found{" "}
             <span className="font-semibold text-primary">
-              {checklists.length}
+              {checklists?.length}
             </span>{" "}
-            {checklists.length > 1 && "Checklists"}
-            {checklists.length === 1 && "Checklist"}
-            {checklists.length === 0 && "Checklists"}
+            {checklists?.length > 1 && "Checklists"}
+            {checklists?.length === 1 && "Checklist"}
+            {checklists?.length === 0 && "Checklists"}
           </p>
 
           <p className="flex items-center font-semibold gap-2 hover:cursor-pointer">
@@ -87,39 +88,45 @@ export default function Checklists() {
           </p>
         </div>
         <div className="flex flex-col gap-3 items-center w-full text-2xl">
-          {checklists.length === 0 && (
+          {checklists?.length === 0 && (
             <div>You have no checklist at this time</div>
           )}
         </div>
-        <div className="flex flex-col gap-3">
-          {checklists.length !== 0 &&
-            checklists.map((checklist, index) => {
-              const {
-                id,
-                title,
-                monitors,
-                author,
-                percentageComplete,
-                daysRemaining,
-                status,
-              } = checklist;
+        {isLoading ? (
+          <div className="flex justify-center w-full">
+            <TailSpin height={50} width={50} color="black" />
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3">
+            {checklists &&
+              checklists.map((checklist, index) => {
+                const {
+                  id,
+                  title,
+                  monitors,
+                  author,
+                  percentageComplete,
+                  daysRemaining,
+                  status,
+                } = checklist;
 
-              if (title?.toLowerCase().includes(searchTerm.toLowerCase())) {
-                return (
-                  <CheckList
-                    id={id}
-                    title={title}
-                    monitors={monitors}
-                    author={author}
-                    percentageComplete={percentageComplete}
-                    daysRemaining={daysRemaining}
-                    status={status}
-                    key={index}
-                  />
-                );
-              }
-            })}
-        </div>
+                if (title?.toLowerCase().includes(searchTerm.toLowerCase())) {
+                  return (
+                    <CheckList
+                      id={id}
+                      title={title}
+                      monitors={monitors}
+                      author={author}
+                      percentageComplete={percentageComplete}
+                      daysRemaining={daysRemaining}
+                      status={status}
+                      key={index}
+                    />
+                  );
+                }
+              })}
+          </div>
+        )}
       </div>
     </DashboardLayout>
   );
