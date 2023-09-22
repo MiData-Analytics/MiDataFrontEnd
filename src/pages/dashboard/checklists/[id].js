@@ -5,7 +5,7 @@ import { Header } from "@/components/Dashboard/CheckList/Header";
 import { CheckListEdit, SideBar } from "@/components/Dashboard/CheckList";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { useGetChecklist, useGetQuestions } from "@/hooks/useGetChecklists";
+import { useGetChecklist } from "@/hooks/useGetChecklists";
 import { useCookie } from "@/hooks/useCookie";
 import { urls } from "@/utils/urls";
 import _debounnce from "lodash/debounce";
