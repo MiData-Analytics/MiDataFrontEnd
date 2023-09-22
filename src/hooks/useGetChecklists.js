@@ -4,7 +4,7 @@ import { useCookie } from "./useCookie";
 import { urls } from "@/utils/urls";
 
 export function useGetChecklists() {
-  const [checklists, setChecklists] = useState([{}]);
+  const [checklists, setChecklists] = useState();
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setError] = useState(false);
   const { token } = useCookie();
@@ -37,12 +37,12 @@ export function useGetChecklists() {
   };
 }
 
-export function useGetQuestions(id){
-  const [questions,setQuestions] = useState([{}])
-  const [isLoading,setIsLoading] = useState(true);
-  const [isError,setError] = useState(false);
+export function useGetQuestions(id) {
+  const [questions, setQuestions] = useState([{}]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setError] = useState(false);
 
-  useEffect(() =>{
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${urls.getAllQuestions}${id}`, {
@@ -61,13 +61,13 @@ export function useGetQuestions(id){
     };
 
     fetchData();
-  },[])
+  }, []);
 
   return {
     questions,
     isLoading,
-    isError
-  }
+    isError,
+  };
 }
 
 export function useGetChecklist(id) {
@@ -120,9 +120,36 @@ export function useGetChecklist(id) {
     }
   }, [id, token]);
 
+  async function refetchData(id) {
+    try {
+      const response = await axios.get(`${urls.getChecklistById}${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.data) {
+        setChecklist(response.data);
+        setIsLoading(false);
+
+        // Cache the checklist and updatedAt in local storage
+        localStorage.setItem(`checklist-${id}`, JSON.stringify(response.data));
+        localStorage.setItem(
+          `checklist-${id}-updatedAt`,
+          response.data.updatedAt
+        );
+      }
+    } catch (error) {
+      console.error("Error fetching checklist data", error);
+      setError(true);
+      setIsLoading(false);
+    }
+  }
+
   return {
     checklist,
     isLoading,
     isError,
+    refetchData
   };
 }
