@@ -79,7 +79,7 @@ export function useGetQuestions(id) {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${urls.monitorGetQuestion}${id}`, {
+        const response = await axios.get(`${urls.monitorGetChecklistQuestions}${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
