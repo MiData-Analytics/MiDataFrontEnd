@@ -13,7 +13,7 @@ export default function AddMonitor() {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
-    lga: "",
+    lga: "Aba North",
     state: "Abia",
     emailAddress: "",
     phoneNumber: "",
