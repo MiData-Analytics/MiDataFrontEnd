@@ -77,11 +77,11 @@ export default function Monitors() {
           <p>
             We've found{" "}
             <span className="font-semibold text-primary">
-              {monitors.length}
+              {monitors && monitors.length}
             </span>{" "}
-            {monitors.length > 1 && "Monitors"}
-            {monitors.length === 1 && "Monitor"}
-            {monitors.length === 0 && "Monitors"}
+            {monitors && monitors.length > 1 && "Monitors"}
+            {monitors && monitors.length === 1 && "Monitor"}
+            {monitors && monitors.length === 0 && "Monitors"}
           </p>
 
           <p className="flex items-center font-semibold gap-2 hover:cursor-pointer">
@@ -92,7 +92,7 @@ export default function Monitors() {
             </span>
           </p>
         </div>
-        {monitors.length === 0 ? (
+        {monitors && monitors.length === 0 ? (
           <div className="w-full flex items-center justify-end">
             <Link href="/dashboard/monitors/add">
               <Image
